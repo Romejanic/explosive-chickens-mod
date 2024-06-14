@@ -1,5 +1,7 @@
 package com.jackd.exchickens.items;
 
+import com.jackd.exchickens.ModContent;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +23,10 @@ public class ItemTrickEgg extends ItemFake {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.decrementUnlessCreative(1, user);
-        world.createExplosion(user, user.getX(), user.getY(), user.getZ(), EXPLOSION_STRENGTH, ExplosionSourceType.MOB);
+        if(!world.isClient()) {
+            world.createExplosion(user, user.getX(), user.getY(), user.getZ(), EXPLOSION_STRENGTH, ExplosionSourceType.MOB);
+            user.damage(ModContent.dmgSource(world, ModContent.DAMAGE_TRICK_EGG), Float.MAX_VALUE);
+        }
         return TypedActionResult.success(stack, world.isClient());
     }
 
