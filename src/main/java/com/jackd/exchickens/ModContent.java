@@ -1,7 +1,9 @@
 package com.jackd.exchickens;
 
 import com.jackd.exchickens.items.ItemTrickEgg;
+import com.jackd.exchickens.items.ItemTrickFood;
 
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
@@ -16,13 +18,18 @@ public class ModContent {
     
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg();
+    public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.of("minecraft:chicken"));
+    public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.of("minecraft:cooked_chicken"));
 
     // ============ DAMAGE ============ //
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
+    public static final RegistryKey<DamageType> DAMAGE_FOOD = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("exploding_food"));
 
     protected static void registerContent() {
         // register all items
         Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
+        Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
+        Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
