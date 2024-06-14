@@ -1,9 +1,8 @@
-# Fabric Example Mod
+# Explosive Chickens 2: Revenge of the Fowl
 
-## Setup
-
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Local dev setup
+```sh
+git clone git@github.com:Romejanic/explosive-chickens-mod.git
+cd explosive-chickens-mod
+./gradlew build vscode
+```
