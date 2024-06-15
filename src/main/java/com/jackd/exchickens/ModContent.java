@@ -3,10 +3,12 @@ package com.jackd.exchickens;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -30,6 +32,13 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
         Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
+
+        // add items to groups
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
+            content.add(TRICK_EGG_ITEM);
+            content.add(TRICK_RAW_CHICKEN_ITEM);
+            content.add(TRICK_COOKED_CHICKEN_ITEM);
+        });
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
