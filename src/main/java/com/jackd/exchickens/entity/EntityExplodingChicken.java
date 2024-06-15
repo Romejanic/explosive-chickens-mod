@@ -13,6 +13,7 @@ public class EntityExplodingChicken extends ChickenEntity {
     private static final float MAX_EXPLODE_RANGE = 6.0F;
 
     private boolean willExplode = false;
+    private boolean didExplode = false;
 
     public EntityExplodingChicken(EntityType<? extends ChickenEntity> entityType, World world) {
         super(entityType, world);
@@ -27,6 +28,9 @@ public class EntityExplodingChicken extends ChickenEntity {
     }
 
     public void explode() {
+        if(this.didExplode) return;
+        this.didExplode = true;
+        
         World world = this.getWorld();
         if(!world.isClient()) {
             float range = MIN_EXPLODE_RANGE + (MAX_EXPLODE_RANGE - MIN_EXPLODE_RANGE) * (float)Math.random();

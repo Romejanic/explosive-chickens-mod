@@ -9,16 +9,18 @@ import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-
 public class EntityExplosiveChickenRenderer extends MobEntityRenderer<EntityExplodingChicken, ChickenEntityModel<EntityExplodingChicken>> {
+
+    private static final Identifier TEXTURE = Identifier.ofVanilla("textures/entity/chicken.png");
 
     public EntityExplosiveChickenRenderer(Context context) {
         super(context, new ChickenEntityModel<EntityExplodingChicken>(context.getPart(EntityModelLayers.CHICKEN)), 0.3f);
+        this.addFeature(new ChickenDotsFeatureRenderer<EntityExplodingChicken>(this));
     }
 
     @Override
     public Identifier getTexture(EntityExplodingChicken entity) {
-        return Identifier.of("minecraft", "textures/entity/chicken.png");
+        return TEXTURE;
     }
 
     @Override
