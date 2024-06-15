@@ -1,4 +1,6 @@
 {
+    "entity.exchickens.exploding_chicken": "Exploding Chicken",
+
     "death.attack.trick_egg": "%1$s was blown up by an egg",
     "death.attack.exploding_food": "%1$s ate an explosive chicken"
 }

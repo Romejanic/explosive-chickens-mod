@@ -1,10 +1,14 @@
 package com.jackd.exchickens;
 
+import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.component.type.FoodComponents;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
@@ -23,6 +27,12 @@ public class ModContent {
     public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.of("minecraft:chicken"));
     public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.of("minecraft:cooked_chicken"));
 
+    // ============ ENTITIES ============ //
+    public static final EntityType<EntityExplodingChicken> EXPLODING_CHICKEN_ENTITY = Registry.register(
+        Registries.ENTITY_TYPE,
+        id("exploding_chicken"),
+        EntityType.Builder.create(EntityExplodingChicken::new, SpawnGroup.CREATURE).build());
+
     // ============ DAMAGE ============ //
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
     public static final RegistryKey<DamageType> DAMAGE_FOOD = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("exploding_food"));
@@ -39,6 +49,9 @@ public class ModContent {
             content.add(TRICK_RAW_CHICKEN_ITEM);
             content.add(TRICK_COOKED_CHICKEN_ITEM);
         });
+
+        // register entity attributes
+        FabricDefaultAttributeRegistry.register(EXPLODING_CHICKEN_ENTITY, EntityExplodingChicken.createChickenAttributes());
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
