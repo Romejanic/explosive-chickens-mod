@@ -17,6 +17,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -55,7 +56,15 @@ public class ModContent {
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
-        return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key));
+        return new DamageSource(dmgTypeEntry(world, key));
+    }
+
+    public static DamageType dmgType(World world, RegistryKey<DamageType> key) {
+        return dmgTypeEntry(world, key).value();
+    }
+
+    private static RegistryEntry<DamageType> dmgTypeEntry(World world, RegistryKey<DamageType> key) {
+        return world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key);
     }
 
     public static Identifier id(String path) {
