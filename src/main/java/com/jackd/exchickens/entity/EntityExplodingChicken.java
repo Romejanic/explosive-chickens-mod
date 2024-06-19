@@ -40,8 +40,7 @@ public class EntityExplodingChicken extends ChickenEntity {
 
         World world = this.getWorld();
         if(!world.isClient()) {
-            float range = MIN_EXPLODE_RANGE + (MAX_EXPLODE_RANGE - MIN_EXPLODE_RANGE) * (float)Math.random();
-            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), range, ExplosionSourceType.MOB);
+            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), randomExplosionRange(), ExplosionSourceType.MOB);
             this.kill();
         }
     }
@@ -72,6 +71,10 @@ public class EntityExplodingChicken extends ChickenEntity {
             return super.dropItem(ModContent.TRICK_EGG_ITEM);
         }
         return super.dropItem(item);
+    }
+
+    public static float randomExplosionRange() {
+        return MIN_EXPLODE_RANGE + (MAX_EXPLODE_RANGE - MIN_EXPLODE_RANGE) * (float)Math.random();
     }
 
 }
