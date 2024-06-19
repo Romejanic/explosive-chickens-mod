@@ -25,18 +25,32 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-
-        world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.PLAYERS);
-
-        if(!world.isClient) {
-            ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
-            EntityLaunchedEgg egg = new EntityLaunchedEgg(world, user);
-            egg.setItem(fired);
-            egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
-            world.spawnEntity(egg);
+        if(this.canFire(user)) {
+            world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.PLAYERS);
+            if(!world.isClient) {
+                ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
+                EntityLaunchedEgg egg = new EntityLaunchedEgg(world, user);
+                egg.setItem(fired);
+                egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
+                world.spawnEntity(egg);
+            }
+            consumeAmmo(user, ModContent.TRICK_EGG_ITEM, 1);
+            return TypedActionResult.success(stack, false);
+        } else {
+            world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS);
+            return TypedActionResult.fail(stack);
         }
+    }
 
-        return TypedActionResult.success(stack, false);
+    private void consumeAmmo(PlayerEntity player, Item ammoItem, int quantity) {
+        if(player.isCreative()) return;
+        for(int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
+            if(stack.isOf(ammoItem)) {
+                stack.decrementUnlessCreative(quantity, player);
+                return;
+            }
+        }
     }
 
     @Override
@@ -45,6 +59,10 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
         ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
         egg.setItem(fired);
         return egg;
+    }
+
+    private boolean canFire(PlayerEntity player) {
+        return player.isCreative() || player.getInventory().contains(stack -> stack.isOf(ModContent.TRICK_EGG_ITEM));
     }
 
 }
