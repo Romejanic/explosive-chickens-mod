@@ -4,6 +4,7 @@ import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.component.type.FoodComponents;
@@ -12,13 +13,16 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -41,6 +45,19 @@ public class ModContent {
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
     public static final RegistryKey<DamageType> DAMAGE_FOOD = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("exploding_food"));
 
+    // ============ ITEM GROUP ============ //
+    public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
+        .icon(() -> new ItemStack(CHICKEN_SPAWN_EGG))
+        .displayName(Text.translatable("itemGroup.exchickens.tab"))
+        .entries((ctx, entries) -> {
+            entries.add(CHICKEN_SPAWN_EGG);
+            entries.add(TRICK_EGG_ITEM);
+            entries.add(TRICK_RAW_CHICKEN_ITEM);
+            entries.add(TRICK_COOKED_CHICKEN_ITEM);
+        })
+        .build();
+
+
     protected static void registerContent() {
         // register all items
         Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
@@ -48,7 +65,7 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
 
-        // add items to groups
+        // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(TRICK_EGG_ITEM);
             content.add(TRICK_RAW_CHICKEN_ITEM);
@@ -60,6 +77,9 @@ public class ModContent {
 
         // register entity attributes
         FabricDefaultAttributeRegistry.register(EXPLODING_CHICKEN_ENTITY, EntityExplodingChicken.createChickenAttributes());
+
+        // register item group
+        Registry.register(Registries.ITEM_GROUP, id("tab"), ITEM_GROUP);
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
