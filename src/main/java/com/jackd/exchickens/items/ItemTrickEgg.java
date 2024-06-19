@@ -5,6 +5,7 @@ import com.jackd.exchickens.ModContent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -23,6 +24,7 @@ public class ItemTrickEgg extends ItemFake {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         stack.decrementUnlessCreative(1, user);
+        user.incrementStat(Stats.USED.getOrCreateStat(this));
         if(!world.isClient()) {
             world.createExplosion(user, user.getX(), user.getY(), user.getZ(), EXPLOSION_STRENGTH, ExplosionSourceType.MOB);
             user.damage(ModContent.dmgSource(world, ModContent.DAMAGE_TRICK_EGG), Float.MAX_VALUE);
