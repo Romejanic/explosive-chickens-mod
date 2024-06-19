@@ -1,11 +1,16 @@
 package com.jackd.exchickens.entity;
 
+import com.jackd.exchickens.ModContent;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.EggItem;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
 
@@ -59,6 +64,14 @@ public class EntityExplodingChicken extends ChickenEntity {
             this.willExplode = true;
         }
         return super.collidesWith(other);
+    }
+
+    @Override
+    public ItemEntity dropItem(ItemConvertible item) {
+        if(item.asItem() instanceof EggItem) {
+            return super.dropItem(ModContent.TRICK_EGG_ITEM);
+        }
+        return super.dropItem(item);
     }
 
 }
