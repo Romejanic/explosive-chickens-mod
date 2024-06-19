@@ -16,8 +16,8 @@ public class ItemTrickEgg extends ItemFake {
 
     public static final float EXPLOSION_STRENGTH = 5.0f;
 
-    public ItemTrickEgg() {
-        super(new Item.Settings(), Identifier.of("minecraft:egg"));
+    public ItemTrickEgg(Identifier originalItem) {
+        super(new Item.Settings(), originalItem);
     }
 
     @Override
