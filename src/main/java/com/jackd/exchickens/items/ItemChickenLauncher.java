@@ -1,5 +1,6 @@
 package com.jackd.exchickens.items;
 
+import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,8 +25,9 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
         ItemStack stack = user.getStackInHand(hand);
 
         if(!world.isClient) {
+            ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
             EntityLaunchedEgg egg = new EntityLaunchedEgg(world, user);
-            egg.setItem(stack);
+            egg.setItem(fired);
             egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
             world.spawnEntity(egg);
         }
@@ -36,8 +38,9 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
         EntityLaunchedEgg egg = new EntityLaunchedEgg(world, pos.getX(), pos.getY(), pos.getZ());
-        egg.setItem(stack);
+        ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
+        egg.setItem(fired);
         return egg;
     }
-    
+
 }
