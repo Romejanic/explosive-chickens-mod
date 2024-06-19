@@ -1,6 +1,8 @@
 package com.jackd.exchickens;
 
 import com.jackd.exchickens.entity.EntityExplodingChicken;
+import com.jackd.exchickens.entity.EntityLaunchedEgg;
+import com.jackd.exchickens.items.ItemChickenLauncher;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 
@@ -32,12 +34,23 @@ public class ModContent {
     public static final EntityType<EntityExplodingChicken> EXPLODING_CHICKEN_ENTITY = Registry.register(
         Registries.ENTITY_TYPE,
         id("exploding_chicken"),
-        EntityType.Builder.create(EntityExplodingChicken::new, SpawnGroup.CREATURE).build());
+        EntityType.Builder.<EntityExplodingChicken>create(EntityExplodingChicken::new, SpawnGroup.CREATURE).build()
+    );
+    
+    public static final EntityType<EntityLaunchedEgg> LAUNCHED_EGG_ENTITY = Registry.register(
+        Registries.ENTITY_TYPE,
+        id("launched_egg"),
+        EntityType.Builder.<EntityLaunchedEgg>create(EntityLaunchedEgg::new, SpawnGroup.MISC)
+            .dimensions(0.25F, 0.25F)
+            .maxTrackingRange(4).trackingTickInterval(10)
+            .build()
+    );
 
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
     public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken"));
     public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.ofVanilla("cooked_chicken"));
+    public static final Item CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(new Item.Settings().maxCount(1));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
@@ -54,6 +67,7 @@ public class ModContent {
             entries.add(TRICK_EGG_ITEM);
             entries.add(TRICK_RAW_CHICKEN_ITEM);
             entries.add(TRICK_COOKED_CHICKEN_ITEM);
+            entries.add(CHICKEN_LAUNCHER_ITEM);
         })
         .build();
 
@@ -64,12 +78,16 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
+        Registry.register(Registries.ITEM, id("launcher"), CHICKEN_LAUNCHER_ITEM);
 
         // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(TRICK_EGG_ITEM);
             content.add(TRICK_RAW_CHICKEN_ITEM);
             content.add(TRICK_COOKED_CHICKEN_ITEM);
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
+            content.add(CHICKEN_LAUNCHER_ITEM);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
             content.add(CHICKEN_SPAWN_EGG);

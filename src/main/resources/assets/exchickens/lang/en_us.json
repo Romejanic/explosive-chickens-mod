@@ -1,9 +1,10 @@
 {
+    "itemGroup.exchickens.tab": "Explosive Chickens 2",
+    
     "entity.exchickens.exploding_chicken": "Exploding Chicken",
 
     "item.exchickens.exploding_chicken_spawn_egg": "Exploding Chicken Spawn Egg",
-
-    "itemGroup.exchickens.tab": "Explosive Chickens 2",
+    "item.exchickens.launcher": "Exploding Chicken Launcher",
 
     "death.attack.trick_egg": "%1$s was blown up by an egg",
     "death.attack.exploding_food": "%1$s ate an explosive chicken"
