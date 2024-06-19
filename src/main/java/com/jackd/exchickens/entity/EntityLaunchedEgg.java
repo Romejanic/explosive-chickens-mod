@@ -5,6 +5,7 @@ import com.jackd.exchickens.ModContent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.hit.BlockHitResult;
@@ -38,6 +39,8 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
+        DamageSource dmg = ModContent.dmgSource(this.getWorld(), ModContent.LAUNCHER, this.getOwner());
+        entityHitResult.getEntity().damage(dmg, Float.MAX_VALUE);
         this.explode();
     }
 

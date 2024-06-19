@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.component.type.FoodComponents;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
@@ -57,6 +58,7 @@ public class ModContent {
     // ============ DAMAGE ============ //
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
     public static final RegistryKey<DamageType> DAMAGE_FOOD = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("exploding_food"));
+    public static final RegistryKey<DamageType> LAUNCHER = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("launcher"));
 
     // ============ ITEM GROUP ============ //
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
@@ -102,6 +104,10 @@ public class ModContent {
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
         return new DamageSource(dmgTypeEntry(world, key));
+    }
+
+    public static DamageSource dmgSource(World world, RegistryKey<DamageType> key, Entity attacker) {
+        return new DamageSource(dmgTypeEntry(world, key), attacker);
     }
 
     public static DamageType dmgType(World world, RegistryKey<DamageType> key) {
