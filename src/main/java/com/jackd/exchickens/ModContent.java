@@ -13,6 +13,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -22,17 +23,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class ModContent {
-    
-    // ============ ITEMS ============ //
-    public static final Item TRICK_EGG_ITEM = new ItemTrickEgg();
-    public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.of("minecraft:chicken"));
-    public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.of("minecraft:cooked_chicken"));
 
     // ============ ENTITIES ============ //
     public static final EntityType<EntityExplodingChicken> EXPLODING_CHICKEN_ENTITY = Registry.register(
         Registries.ENTITY_TYPE,
         id("exploding_chicken"),
         EntityType.Builder.create(EntityExplodingChicken::new, SpawnGroup.CREATURE).build());
+
+    // ============ ITEMS ============ //
+    public static final Item TRICK_EGG_ITEM = new ItemTrickEgg();
+    public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.of("minecraft:chicken"));
+    public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.of("minecraft:cooked_chicken"));
+
+    public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
     // ============ DAMAGE ============ //
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
@@ -43,12 +46,16 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
         Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
+        Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
 
         // add items to groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(TRICK_EGG_ITEM);
             content.add(TRICK_RAW_CHICKEN_ITEM);
             content.add(TRICK_COOKED_CHICKEN_ITEM);
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
+            content.add(CHICKEN_SPAWN_EGG);
         });
 
         // register entity attributes
