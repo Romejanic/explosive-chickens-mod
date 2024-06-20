@@ -25,7 +25,7 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if(this.canFire(user)) {
+        if(canFire(user)) {
             world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.PLAYERS);
             if(!world.isClient) {
                 ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
@@ -61,7 +61,7 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
         return egg;
     }
 
-    private boolean canFire(PlayerEntity player) {
+    public static boolean canFire(PlayerEntity player) {
         return player.isCreative() || player.getInventory().contains(stack -> stack.isOf(ModContent.TRICK_EGG_ITEM));
     }
 

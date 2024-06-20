@@ -6,6 +6,11 @@
     "item.exchickens.exploding_chicken_spawn_egg": "Exploding Chicken Spawn Egg",
     "item.exchickens.launcher": "Exploding Chicken Launcher",
 
+    "exchickens.launcher.ammo": "Ammo: %s",
+    "exchickens.launcher.ammo.infinite": "Infinite",
+    "exchickens.launcher.ammo.loaded": "Loaded",
+    "exchickens.launcher.ammo.empty": "Empty",
+
     "death.attack.trick_egg": "%1$s was blown up by an egg",
     "death.attack.exploding_food": "%1$s ate an explosive chicken",
     "death.attack.launcher": "%2$s hurled a chicken at %1$s",
