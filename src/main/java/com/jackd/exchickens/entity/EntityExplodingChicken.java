@@ -1,7 +1,9 @@
 package com.jackd.exchickens.entity;
 
 import com.jackd.exchickens.ModContent;
+import com.jackd.exchickens.util.ItemUtils;
 
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -11,6 +13,7 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EggItem;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
 
@@ -41,13 +44,19 @@ public class EntityExplodingChicken extends ChickenEntity {
         World world = this.getWorld();
         if(!world.isClient()) {
             world.createExplosion(this, this.getX(), this.getY(), this.getZ(), randomExplosionRange(), ExplosionSourceType.MOB);
-            this.kill();
+            this.discard();
         }
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
         if(!super.damage(source, amount)) return false;
+
+        // don't explode if the attacker has silk touch
+        ItemStack weaponStack = source.getWeaponStack();
+        if(weaponStack != null && ItemUtils.hasEnchantment(weaponStack, Enchantments.SILK_TOUCH, this.getWorld())) {
+            return true;
+        }
 
         // explode on 40% of hits or if hit by an arrow
         if(source.isOf(DamageTypes.ARROW) || Math.random() < 0.4d) {
