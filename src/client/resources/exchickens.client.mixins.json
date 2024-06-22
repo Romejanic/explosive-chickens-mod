@@ -3,7 +3,8 @@
     "package": "com.jackd.exchickens.client.mixins",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "ItemStackMixin"
+        "ItemStackMixin",
+        "PlayerEntityRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

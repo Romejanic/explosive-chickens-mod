@@ -13,6 +13,7 @@
     },
     "icon": "assets/exchickens/icon.png",
     "environment": "*",
+    "accessWidener": "exchickens.accesswidener",
     "entrypoints": {
         "main": [
             "com.jackd.exchickens.ExplosiveChickens"
