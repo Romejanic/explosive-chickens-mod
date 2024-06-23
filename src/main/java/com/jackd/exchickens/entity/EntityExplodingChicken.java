@@ -3,9 +3,12 @@ package com.jackd.exchickens.entity;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.util.ItemUtils;
+import com.jackd.exchickens.util.MathUtils;
+import com.jackd.exchickens.util.NbtUtils;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
@@ -41,6 +44,7 @@ public class EntityExplodingChicken extends ChickenEntity {
 
     private static final TrackedData<ItemStack> FIREWORK_STACK;
     private static final TrackedData<Integer> FIREWORK_FUSE;
+    private static final TrackedData<Vector3f> LAUNCH_DIRECTION;
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
 
     private static final float MIN_EXPLODE_RANGE = 2.0F;
@@ -58,6 +62,7 @@ public class EntityExplodingChicken extends ChickenEntity {
         super.initDataTracker(builder);
         builder.add(FIREWORK_STACK, getDefaultFireworkStack());
         builder.add(FIREWORK_FUSE, -1);
+        builder.add(LAUNCH_DIRECTION, MathUtils.ZERO);
     }
 
     public boolean hasFireworkAttached() {
@@ -84,9 +89,12 @@ public class EntityExplodingChicken extends ChickenEntity {
     }
 
     public void igniteFirework() {
-        if(this.hasFireworkAttached()) {
+        if(this.hasFireworkAttached() && !this.getWorld().isClient) {
             this.getWorld().playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
+            Vector3f launchDir = MathUtils.randomLaunchDirection(this);
             this.dataTracker.set(FIREWORK_FUSE, 60);
+            this.dataTracker.set(LAUNCH_DIRECTION, launchDir);
+            this.setVelocity(MathUtils.dirToVelocity(launchDir, 1.5));
         }
     }
 
@@ -98,10 +106,15 @@ public class EntityExplodingChicken extends ChickenEntity {
         }
         // is the firework on the chicken currently lit?
         if(this.hasFireworkAttached() && this.isFireworkIgnited()) {
+            Vector3f dir = this.dataTracker.get(LAUNCH_DIRECTION);
+            this.dataTracker.set(LAUNCH_DIRECTION, MathUtils.addJitter(dir, 0.8f, 0.3f));
+
             // spawn particles behind chicken
-            float offX = -MathHelper.sin(this.getYaw() * 0.017453292F);
-            float offZ = MathHelper.cos(this.getYaw() * 0.017453292F);
-            this.getWorld().addParticle(ParticleTypes.FIREWORK, this.getX() + offX, this.getY() + 0.5, this.getZ() + offZ, 0d, 0d, 0d);
+            this.getWorld().addParticle(ParticleTypes.FIREWORK, this.getX() - dir.x, this.getY(), this.getZ() - dir.z, 0d, 0d, 0d);
+
+            // add velocity in same direction
+            this.setYaw(MathUtils.xzAngle(dir));
+            this.addVelocity(MathUtils.dirToVelocity(dir, MathHelper.nextDouble(MathUtils.RANDOM, 0.01, 0.15)));
 
             // update firework fuse time
             int fuse = this.dataTracker.get(FIREWORK_FUSE) - 1;
@@ -176,7 +189,8 @@ public class EntityExplodingChicken extends ChickenEntity {
             // if clicking with a flint and steel, ignite rocket
             if(heldItem.isOf(Items.FLINT_AND_STEEL)) {
                 this.igniteFirework();
-                return ActionResult.CONSUME;
+                heldItem.damage(1, player, getSlotForHand(hand));
+                return ActionResult.SUCCESS;
             }
             
             // give rocket to player and remove from chicken
@@ -216,6 +230,7 @@ public class EntityExplodingChicken extends ChickenEntity {
             this.dataTracker.set(FIREWORK_STACK, stack);
             if(nbt.contains("FireworkFuseTime")) {
                 this.dataTracker.set(FIREWORK_FUSE, nbt.getInt("FireworkFuseTime"));
+                this.dataTracker.set(LAUNCH_DIRECTION, NbtUtils.readVector3f(nbt, "LaunchDirection"));
             }
         }
     }
@@ -227,6 +242,7 @@ public class EntityExplodingChicken extends ChickenEntity {
             nbt.put("Firework", this.getFireworkStack().encode(getRegistryManager()));
             if(this.isFireworkIgnited()) {
                 nbt.putInt("FireworkFuseTime", this.dataTracker.get(FIREWORK_FUSE));
+                NbtUtils.writeVector3f(nbt, "LaunchDirection", this.dataTracker.get(LAUNCH_DIRECTION));
             }
         }
     }
@@ -246,6 +262,7 @@ public class EntityExplodingChicken extends ChickenEntity {
     static {
         FIREWORK_STACK = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.ITEM_STACK);
         FIREWORK_FUSE = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.INTEGER);
+        LAUNCH_DIRECTION = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.VECTOR3F);
     }
 
 }
