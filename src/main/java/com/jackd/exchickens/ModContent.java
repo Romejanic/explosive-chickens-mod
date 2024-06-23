@@ -35,7 +35,9 @@ public class ModContent {
     public static final EntityType<EntityExplodingChicken> EXPLODING_CHICKEN_ENTITY = Registry.register(
         Registries.ENTITY_TYPE,
         id("exploding_chicken"),
-        EntityType.Builder.<EntityExplodingChicken>create(EntityExplodingChicken::new, SpawnGroup.CREATURE).build()
+        EntityType.Builder.<EntityExplodingChicken>create(EntityExplodingChicken::new, SpawnGroup.CREATURE)
+            .dimensions(0.4F, 0.7F).eyeHeight(0.644F)
+            .build()
     );
     
     public static final EntityType<EntityLaunchedEgg> LAUNCHED_EGG_ENTITY = Registry.register(

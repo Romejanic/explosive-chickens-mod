@@ -16,6 +16,7 @@ public class EntityExplosiveChickenRenderer extends MobEntityRenderer<EntityExpl
     public EntityExplosiveChickenRenderer(Context context) {
         super(context, new ChickenEntityModel<EntityExplodingChicken>(context.getPart(EntityModelLayers.CHICKEN)), 0.3f);
         this.addFeature(new ChickenDotsFeatureRenderer<EntityExplodingChicken>(this));
+        this.addFeature(new FireworkRocketFeatureRenderer<EntityExplodingChicken>(this));
     }
 
     @Override
