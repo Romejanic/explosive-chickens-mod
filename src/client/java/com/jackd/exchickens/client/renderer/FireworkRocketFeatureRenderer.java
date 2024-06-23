@@ -31,6 +31,10 @@ public class FireworkRocketFeatureRenderer<T extends EntityExplodingChicken> ext
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, EntityExplodingChicken entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        // check if chicken has rocket attached
+        if(!entity.hasFireworkAttached()) return;
+
+        // get buffer and set angles
         VertexConsumer consumer = vertexConsumers.getBuffer(LAYER);
         this.fireworkRocketModel.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
 

@@ -1,5 +1,7 @@
 package com.jackd.exchickens.entity;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.util.ItemUtils;
 
@@ -9,15 +11,23 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.data.DataTracker.Builder;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EggItem;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
 
 public class EntityExplodingChicken extends ChickenEntity {
+
+    private static final TrackedData<ItemStack> FIREWORK_STACK;
 
     private static final float MIN_EXPLODE_RANGE = 2.0F;
     private static final float MAX_EXPLODE_RANGE = 6.0F;
@@ -27,6 +37,27 @@ public class EntityExplodingChicken extends ChickenEntity {
 
     public EntityExplodingChicken(EntityType<? extends ChickenEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    protected void initDataTracker(Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(FIREWORK_STACK, getDefaultFireworkStack());
+    }
+
+    public boolean hasFireworkAttached() {
+        return this.getFireworkStack().isOf(Items.FIREWORK_ROCKET);
+    }
+
+    @Nullable
+    public ItemStack getFireworkStack() {
+        return this.dataTracker.get(FIREWORK_STACK);
+    }
+
+    public boolean setFireworkStack(ItemStack stack) {
+        if(!stack.isOf(Items.FIREWORK_ROCKET)) return false;
+        this.dataTracker.set(FIREWORK_STACK, stack);
+        return true;
     }
 
     @Override
@@ -84,6 +115,31 @@ public class EntityExplodingChicken extends ChickenEntity {
 
     public static float randomExplosionRange() {
         return MIN_EXPLODE_RANGE + (MAX_EXPLODE_RANGE - MIN_EXPLODE_RANGE) * (float)Math.random();
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        if(nbt.contains("Firework", 10)) {
+            ItemStack stack = ItemStack.fromNbt(this.getRegistryManager(), nbt.getCompound("Firework")).orElse(getDefaultFireworkStack());
+            this.dataTracker.set(FIREWORK_STACK, stack);
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if(this.hasFireworkAttached()) {
+            nbt.put("Firework", this.getFireworkStack().encode(getRegistryManager()));
+        }
+    }
+
+    private static ItemStack getDefaultFireworkStack() {
+        return new ItemStack(Items.AIR);
+    }
+
+    static {
+        FIREWORK_STACK = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.ITEM_STACK);
     }
 
 }
