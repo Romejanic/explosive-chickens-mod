@@ -40,7 +40,7 @@ import net.minecraft.world.World.ExplosionSourceType;
 public class EntityExplodingChicken extends ChickenEntity {
 
     private static final TrackedData<ItemStack> FIREWORK_STACK;
-    private static final TrackedData<Boolean> FIREWORK_IGNITED;
+    private static final TrackedData<Integer> FIREWORK_FUSE;
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
 
     private static final float MIN_EXPLODE_RANGE = 2.0F;
@@ -57,11 +57,15 @@ public class EntityExplodingChicken extends ChickenEntity {
     protected void initDataTracker(Builder builder) {
         super.initDataTracker(builder);
         builder.add(FIREWORK_STACK, getDefaultFireworkStack());
-        builder.add(FIREWORK_IGNITED, false);
+        builder.add(FIREWORK_FUSE, -1);
     }
 
     public boolean hasFireworkAttached() {
         return this.getFireworkStack().isOf(Items.FIREWORK_ROCKET);
+    }
+
+    public boolean isFireworkIgnited() {
+        return this.dataTracker.get(FIREWORK_FUSE) > -1;
     }
 
     @Nullable
@@ -82,7 +86,7 @@ public class EntityExplodingChicken extends ChickenEntity {
     public void igniteFirework() {
         if(this.hasFireworkAttached()) {
             this.getWorld().playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
-            this.dataTracker.set(FIREWORK_IGNITED, true);
+            this.dataTracker.set(FIREWORK_FUSE, 60);
         }
     }
 
@@ -92,10 +96,19 @@ public class EntityExplodingChicken extends ChickenEntity {
         if(this.willExplode) {
             this.explode();
         }
-        if(this.hasFireworkAttached() && this.dataTracker.get(FIREWORK_IGNITED)) {
+        // is the firework on the chicken currently lit?
+        if(this.hasFireworkAttached() && this.isFireworkIgnited()) {
+            // spawn particles behind chicken
             float offX = -MathHelper.sin(this.getYaw() * 0.017453292F);
             float offZ = MathHelper.cos(this.getYaw() * 0.017453292F);
             this.getWorld().addParticle(ParticleTypes.FIREWORK, this.getX() + offX, this.getY() + 0.5, this.getZ() + offZ, 0d, 0d, 0d);
+
+            // update firework fuse time
+            int fuse = this.dataTracker.get(FIREWORK_FUSE) - 1;
+            this.dataTracker.set(FIREWORK_FUSE, fuse);
+            if(fuse == 0) {
+                this.explode();
+            }
         }
     }
 
@@ -198,10 +211,12 @@ public class EntityExplodingChicken extends ChickenEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.dataTracker.set(FIREWORK_IGNITED, nbt.getBoolean("FireworkIgnited"));
         if(nbt.contains("Firework", 10)) {
             ItemStack stack = ItemStack.fromNbt(this.getRegistryManager(), nbt.getCompound("Firework")).orElse(getDefaultFireworkStack());
             this.dataTracker.set(FIREWORK_STACK, stack);
+            if(nbt.contains("FireworkFuseTime")) {
+                this.dataTracker.set(FIREWORK_FUSE, nbt.getInt("FireworkFuseTime"));
+            }
         }
     }
 
@@ -210,7 +225,9 @@ public class EntityExplodingChicken extends ChickenEntity {
         super.writeCustomDataToNbt(nbt);
         if(this.hasFireworkAttached()) {
             nbt.put("Firework", this.getFireworkStack().encode(getRegistryManager()));
-            nbt.putBoolean("FireworkIgnited", this.dataTracker.get(FIREWORK_IGNITED));
+            if(this.isFireworkIgnited()) {
+                nbt.putInt("FireworkFuseTime", this.dataTracker.get(FIREWORK_FUSE));
+            }
         }
     }
 
@@ -228,7 +245,7 @@ public class EntityExplodingChicken extends ChickenEntity {
 
     static {
         FIREWORK_STACK = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.ITEM_STACK);
-        FIREWORK_IGNITED = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.BOOLEAN);
+        FIREWORK_FUSE = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.INTEGER);
     }
 
 }
