@@ -137,6 +137,9 @@ public class EntityExplodingChicken extends ChickenEntity {
         if(!world.isClient()) {
             world.createExplosion(this, this.getX(), this.getY(), this.getZ(), randomExplosionRange(), ExplosionSourceType.MOB);
             this.getWorld().sendEntityStatus(this, STATUS_FIREWORK_EXPLODE);
+            if(this.isFireworkIgnited()) {
+                this.dropItem(ModContent.TRICK_COOKED_CHICKEN_ITEM);
+            }
             this.discard();
         }
     }
