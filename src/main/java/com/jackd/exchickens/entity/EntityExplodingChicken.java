@@ -123,6 +123,10 @@ public class EntityExplodingChicken extends ChickenEntity {
                 this.explode();
             }
         }
+        // ignite fireworks if lit on fire
+        if(this.isOnFire() && this.hasFireworkAttached() && !this.isFireworkIgnited()) {
+            this.igniteFirework();
+        }
     }
 
     public void explode() {
