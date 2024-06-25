@@ -34,6 +34,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -53,6 +54,8 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     private static final TrackedData<Vector3f> LAUNCH_DIRECTION;
     private static final TrackedData<Optional<UUID>> OWNER_UUID;
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
+    private static final byte STATUS_TAME_SUCCESS = 18;
+    private static final byte STATUS_TAME_FAILURE = 19;
 
     private static final float MIN_EXPLODE_RANGE = 2.0F;
     private static final float MAX_EXPLODE_RANGE = 6.0F;
@@ -183,31 +186,42 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        // is the player holding a firework rocket?
+        World world = this.getWorld();
         ItemStack heldItem = player.getStackInHand(hand);
-        if(heldItem != null && heldItem.isOf(Items.FIREWORK_ROCKET)) {
-            // check if chicken already has a rocket attached
-            ItemStack oldStack = null;
-            if(this.hasFireworkAttached()) {
-                oldStack = this.getFireworkStack();
+        if(heldItem != null) {
+            // is the player using a firework rocket?
+            if(heldItem.isOf(Items.FIREWORK_ROCKET)) {
+                // check if chicken already has a rocket attached
+                ItemStack oldStack = null;
+                if(this.hasFireworkAttached()) {
+                    oldStack = this.getFireworkStack();
+                }
+                // set new firework rocket, decrease stack size
+                this.setFireworkStack(heldItem.copyWithCount(1));
+                heldItem.decrementUnlessCreative(1, player);
+                // give old rocket back to player
+                if(oldStack != null) {
+                    player.giveItemStack(oldStack);
+                }
+                return ActionResult.SUCCESS;
             }
-            // set new firework rocket, decrease stack size
-            this.setFireworkStack(heldItem.copyWithCount(1));
-            heldItem.decrementUnlessCreative(1, player);
-            // give old rocket back to player
-            if(oldStack != null) {
-                player.giveItemStack(oldStack);
-            }
-            return ActionResult.SUCCESS;
-        // otherwise is there a rocket attached?
-        } else if(this.hasFireworkAttached()) {
-            // if clicking with a flint and steel, ignite rocket
-            if(heldItem.isOf(Items.FLINT_AND_STEEL)) {
+            // is the player using a flint and steel?
+            else if(heldItem.isOf(Items.FLINT_AND_STEEL) && this.hasFireworkAttached()) {
                 this.igniteFirework();
                 heldItem.damage(1, player, getSlotForHand(hand));
                 return ActionResult.SUCCESS;
             }
-            
+            // is the player using gunpowder?
+            else if(heldItem.isOf(Items.GUNPOWDER) && !this.isTamed()) {
+                if(!world.isClient) {
+                    this.tryTameChicken(player, world);
+                }
+                heldItem.decrementUnlessCreative(1, player);
+                return ActionResult.SUCCESS;
+            }
+        }
+        // otherwise is there a rocket attached?
+        else if(this.hasFireworkAttached()) {
             // give rocket to player and remove from chicken
             player.giveItemStack(this.getFireworkStack());
             this.removeFirework();
@@ -215,6 +229,17 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         }
         // otherwise use vanilla behaviour
         return super.interactMob(player, hand);
+    }
+
+    private void tryTameChicken(PlayerEntity player, World world) {
+        if(MathUtils.randomChance(8)) {
+            // tame successful
+            this.setOwnerUUID(player.getUuid());
+            world.sendEntityStatus(this, STATUS_TAME_SUCCESS);
+        } else {
+            // tame failed
+            world.sendEntityStatus(this, STATUS_TAME_FAILURE);
+        }
     }
 
     @Override
@@ -283,10 +308,31 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     @Override
     public void handleStatus(byte status) {
-        if(status == STATUS_FIREWORK_EXPLODE && this.getWorld().isClient) {
-            this.explodeFireworks();
+        World world = this.getWorld();
+        switch(status) {
+            case STATUS_FIREWORK_EXPLODE:
+                if(world.isClient) {
+                    this.explodeFireworks();
+                }
+                break;
+            case STATUS_TAME_SUCCESS:
+            case STATUS_TAME_FAILURE:
+                this.spawnTameParticles(status == STATUS_TAME_SUCCESS, world);
+                break;
+            default:
+                break;
         }
         super.handleStatus(status);
+    }
+
+    private void spawnTameParticles(boolean success, World world) {
+        ParticleEffect particleEffect = success ? ParticleTypes.HEART : ParticleTypes.SMOKE;
+        for(int i = 0; i < 7; ++i) {
+            double d = this.random.nextGaussian() * 0.02;
+            double e = this.random.nextGaussian() * 0.02;
+            double f = this.random.nextGaussian() * 0.02;
+            world.addParticle(particleEffect, this.getParticleX(1.0), this.getRandomBodyY() + 0.5, this.getParticleZ(1.0), d, e, f);
+        }
     }
 
     @Override

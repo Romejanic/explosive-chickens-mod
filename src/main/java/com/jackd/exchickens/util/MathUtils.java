@@ -39,4 +39,18 @@ public class MathUtils {
         return new Vec3d(dir).multiply(mag);
     }
 
+    /**
+     * Determines if an event occurs based on a given probability.
+     * The method uses a random number generator to simulate the chance.
+     * 
+     * @param outOf the denominator of the probability fraction, indicating 
+     *              the chance out of how many possibilities. For example, 
+     *              if outOf is 10, the chance of the event occurring is 1 in 10.
+     * @return {@code true} if the event occurs (i.e., the randomly generated number is 0); 
+     *         {@code false} otherwise.
+     */
+    public static final boolean randomChance(int outOf) {
+        return RANDOM.nextInt(outOf) == 0;
+    }
+
 }
