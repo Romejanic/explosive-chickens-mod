@@ -1,6 +1,8 @@
 package com.jackd.exchickens.entity;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -17,6 +19,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
@@ -39,14 +42,16 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
 
-public class EntityExplodingChicken extends ChickenEntity {
+public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     private static final TrackedData<ItemStack> FIREWORK_STACK;
     private static final TrackedData<Integer> FIREWORK_FUSE;
     private static final TrackedData<Vector3f> LAUNCH_DIRECTION;
+    private static final TrackedData<Optional<UUID>> OWNER_UUID;
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
 
     private static final float MIN_EXPLODE_RANGE = 2.0F;
@@ -65,6 +70,7 @@ public class EntityExplodingChicken extends ChickenEntity {
         builder.add(FIREWORK_STACK, getDefaultFireworkStack());
         builder.add(FIREWORK_FUSE, -1);
         builder.add(LAUNCH_DIRECTION, MathUtils.ZERO);
+        builder.add(OWNER_UUID, Optional.empty());
     }
 
     public boolean hasFireworkAttached() {
@@ -212,6 +218,19 @@ public class EntityExplodingChicken extends ChickenEntity {
     }
 
     @Override
+    public UUID getOwnerUuid() {
+        return this.dataTracker.get(OWNER_UUID).orElse(null);
+    }
+
+    public void setOwnerUUID(UUID uuid) {
+        this.dataTracker.set(OWNER_UUID, Optional.of(uuid));
+    }
+
+    public boolean isTamed() {
+        return this.getOwnerUuid() != null;
+    }
+    
+    @Override
     public boolean collidesWith(Entity other) {
         if(other instanceof PlayerEntity) {
             this.willExplode = true;
@@ -242,6 +261,9 @@ public class EntityExplodingChicken extends ChickenEntity {
                 this.dataTracker.set(LAUNCH_DIRECTION, NbtUtils.readVector3f(nbt, "LaunchDirection"));
             }
         }
+        if(nbt.containsUuid("Owner")) {
+            this.setOwnerUUID(nbt.getUuid("Owner"));
+        }
     }
 
     @Override
@@ -253,6 +275,9 @@ public class EntityExplodingChicken extends ChickenEntity {
                 nbt.putInt("FireworkFuseTime", this.dataTracker.get(FIREWORK_FUSE));
                 NbtUtils.writeVector3f(nbt, "LaunchDirection", this.dataTracker.get(LAUNCH_DIRECTION));
             }
+        }
+        if(this.getOwnerUuid() != null) {
+            nbt.putUuid("Owner", this.getOwnerUuid());
         }
     }
 
@@ -269,6 +294,11 @@ public class EntityExplodingChicken extends ChickenEntity {
         return ModContent.EXPLODING_CHICKEN_ENTITY.create(serverWorld);
     }
 
+    @Override
+    public EntityView method_48926() {
+        return this.getEntityWorld();
+    }
+
     private static ItemStack getDefaultFireworkStack() {
         return new ItemStack(Items.AIR);
     }
@@ -277,6 +307,7 @@ public class EntityExplodingChicken extends ChickenEntity {
         FIREWORK_STACK = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.ITEM_STACK);
         FIREWORK_FUSE = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.INTEGER);
         LAUNCH_DIRECTION = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.VECTOR3F);
+        OWNER_UUID = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     }
 
 }
