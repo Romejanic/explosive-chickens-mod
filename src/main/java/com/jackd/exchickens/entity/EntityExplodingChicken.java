@@ -78,7 +78,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     }
 
     public boolean hasFireworkAttached() {
-        return this.getFireworkStack().isOf(Items.FIREWORK_ROCKET);
+        return this.getFireworkStack().isOf(Items.FIREWORK_ROCKET) && !this.isBaby();
     }
 
     public boolean isFireworkIgnited() {
@@ -195,7 +195,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         ItemStack heldItem = player.getStackInHand(hand);
         if(heldItem != null) {
             // is the player using a firework rocket?
-            if(heldItem.isOf(Items.FIREWORK_ROCKET)) {
+            if(heldItem.isOf(Items.FIREWORK_ROCKET) && !this.isBaby()) {
                 // check if chicken already has a rocket attached
                 ItemStack oldStack = null;
                 if(this.hasFireworkAttached()) {
