@@ -19,6 +19,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -186,6 +187,10 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        // if tamed don't allow other players to interact
+        if(this.isTamed() && !this.isOwner(player)) return super.interactMob(player, hand);
+
+        // test which item player is holding (if any)
         World world = this.getWorld();
         ItemStack heldItem = player.getStackInHand(hand);
         if(heldItem != null) {
@@ -254,13 +259,22 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     public boolean isTamed() {
         return this.getOwnerUuid() != null;
     }
+
+    public boolean isOwner(LivingEntity other) {
+        return this.isTamed() && other.getUuid().equals(this.getOwnerUuid());
+    }
     
     @Override
     public boolean collidesWith(Entity other) {
         if(other instanceof PlayerEntity) {
-            this.willExplode = true;
+            this.willExplode = !this.isTamed();
         }
         return super.collidesWith(other);
+    }
+
+    @Override
+    public boolean canTarget(LivingEntity target) {
+        return this.isTamed() && this.isOwner(target) ? false : super.canTarget(target);
     }
 
     @Override
@@ -286,8 +300,10 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
                 this.dataTracker.set(LAUNCH_DIRECTION, NbtUtils.readVector3f(nbt, "LaunchDirection"));
             }
         }
-        if(nbt.containsUuid("Owner")) {
-            this.setOwnerUUID(nbt.getUuid("Owner"));
+        // try to get owner
+        UUID uuid = NbtUtils.readUUID(nbt, this, "Owner");
+        if(uuid != null) {
+            this.setOwnerUUID(uuid);
         }
     }
 
