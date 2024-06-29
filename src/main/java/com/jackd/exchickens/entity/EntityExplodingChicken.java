@@ -9,6 +9,7 @@ import org.joml.Vector3f;
 
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.entity.ai.GoalAttackTamed;
+import com.jackd.exchickens.util.ExplosionSizes;
 import com.jackd.exchickens.util.ItemUtils;
 import com.jackd.exchickens.util.MathUtils;
 import com.jackd.exchickens.util.NbtUtils;
@@ -62,9 +63,6 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
     private static final byte STATUS_TAME_SUCCESS = 18;
     private static final byte STATUS_TAME_FAILURE = 19;
-
-    private static final float MIN_EXPLODE_RANGE = 2.0F;
-    private static final float MAX_EXPLODE_RANGE = 6.0F;
 
     private boolean willExplode = false;
     private boolean didExplode = false;
@@ -160,7 +158,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
         World world = this.getWorld();
         if(!world.isClient()) {
-            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), randomExplosionRange(), ExplosionSourceType.MOB);
+            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), ExplosionSizes.chickenExplosion(), ExplosionSourceType.MOB);
             this.getWorld().sendEntityStatus(this, STATUS_FIREWORK_EXPLODE);
             if(this.isFireworkIgnited()) {
                 this.dropItem(ModContent.TRICK_COOKED_CHICKEN_ITEM);
@@ -304,10 +302,6 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
             return super.dropItem(ModContent.TRICK_EGG_ITEM);
         }
         return super.dropItem(item);
-    }
-
-    public static float randomExplosionRange() {
-        return MIN_EXPLODE_RANGE + (MAX_EXPLODE_RANGE - MIN_EXPLODE_RANGE) * (float)Math.random();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jackd.exchickens.items;
 
 import com.jackd.exchickens.ModContent;
+import com.jackd.exchickens.util.ExplosionSizes;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,8 +15,6 @@ import net.minecraft.world.World.ExplosionSourceType;
 
 public class ItemTrickEgg extends ItemFake {
 
-    public static final float EXPLOSION_STRENGTH = 5.0f;
-
     public ItemTrickEgg(Identifier originalItem) {
         super(new Item.Settings(), originalItem);
     }
@@ -26,7 +25,7 @@ public class ItemTrickEgg extends ItemFake {
         stack.decrementUnlessCreative(1, user);
         user.incrementStat(Stats.USED.getOrCreateStat(this));
         if(!world.isClient()) {
-            world.createExplosion(user, user.getX(), user.getY(), user.getZ(), EXPLOSION_STRENGTH, ExplosionSourceType.MOB);
+            world.createExplosion(user, user.getX(), user.getY(), user.getZ(), ExplosionSizes.ITEM_EXPLOSION, ExplosionSourceType.MOB);
             user.damage(ModContent.dmgSource(world, ModContent.DAMAGE_TRICK_EGG), Float.MAX_VALUE);
         }
         return TypedActionResult.success(stack, world.isClient());
