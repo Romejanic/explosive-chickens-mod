@@ -58,7 +58,7 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
     }
 
     private void spawnSmokeParticles(PlayerEntity player, World world) {
-        final float d2r = MathHelper.DEGREES_PER_RADIAN;
+        final float d2r = MathHelper.RADIANS_PER_DEGREE;
         Vec3d eyePos = player.getEyePos();
         float f = -MathHelper.sin(player.getYaw() * d2r) * MathHelper.cos(player.getPitch() * d2r);
         float g = -MathHelper.sin(player.getPitch() * d2r);
