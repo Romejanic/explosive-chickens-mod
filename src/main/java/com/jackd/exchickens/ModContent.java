@@ -105,7 +105,7 @@ public class ModContent {
         });
 
         // register entity attributes
-        FabricDefaultAttributeRegistry.register(EXPLODING_CHICKEN_ENTITY, EntityExplodingChicken.createChickenAttributes());
+        FabricDefaultAttributeRegistry.register(EXPLODING_CHICKEN_ENTITY, EntityExplodingChicken.createExplodingChickenAttributes());
 
         // register item group
         Registry.register(Registries.ITEM_GROUP, id("tab"), ITEM_GROUP);

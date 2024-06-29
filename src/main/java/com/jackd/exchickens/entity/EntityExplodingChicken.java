@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.jackd.exchickens.ModContent;
+import com.jackd.exchickens.entity.ai.GoalAttackTamed;
 import com.jackd.exchickens.util.ItemUtils;
 import com.jackd.exchickens.util.MathUtils;
 import com.jackd.exchickens.util.NbtUtils;
@@ -21,6 +22,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.Goal.Control;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
@@ -66,6 +71,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     public EntityExplodingChicken(EntityType<? extends ChickenEntity> entityType, World world) {
         super(entityType, world);
+        this.targetSelector.setControlEnabled(Control.TARGET, true);
     }
 
     @Override
@@ -75,6 +81,13 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         builder.add(FIREWORK_FUSE, -1);
         builder.add(LAUNCH_DIRECTION, MathUtils.ZERO);
         builder.add(OWNER_UUID, Optional.empty());
+    }
+
+    @Override
+    protected void initGoals() {
+        super.initGoals();
+        this.goalSelector.add(0, new MeleeAttackGoal(this, this.getMovementSpeed() * 2f, false));
+        this.targetSelector.add(0, new GoalAttackTamed(this));
     }
 
     public boolean hasFireworkAttached() {
@@ -236,6 +249,14 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         return super.interactMob(player, hand);
     }
 
+    @Override
+    public void onAttacking(Entity target) {
+        super.onAttacking(target);
+        if(target instanceof LivingEntity ent && this.isTamed() && !this.isOwner(ent)) {
+            this.explode();
+        }
+    }
+
     private void tryTameChicken(PlayerEntity player, World world) {
         if(MathUtils.randomChance(8)) {
             // tame successful
@@ -363,6 +384,11 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
     private static ItemStack getDefaultFireworkStack() {
         return new ItemStack(Items.AIR);
+    }
+
+    public static DefaultAttributeContainer.Builder createExplodingChickenAttributes() {
+        return ChickenEntity.createChickenAttributes()
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0F);
     }
 
     static {
