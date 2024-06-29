@@ -5,12 +5,14 @@ import com.jackd.exchickens.entity.EntityLaunchedEgg;
 import com.jackd.exchickens.items.ItemChickenLauncher;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
+import com.jackd.exchickens.items.ItemChickenLauncher.Variant;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -57,7 +59,8 @@ public class ModContent {
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
     public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken"));
     public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.ofVanilla("cooked_chicken"));
-    public static final Item CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(new Item.Settings().maxCount(1));
+    public static final Item CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, new Item.Settings().maxCount(1));
+    public static final Item INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, new Item.Settings().maxCount(1).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
@@ -76,6 +79,7 @@ public class ModContent {
             entries.add(TRICK_RAW_CHICKEN_ITEM);
             entries.add(TRICK_COOKED_CHICKEN_ITEM);
             entries.add(CHICKEN_LAUNCHER_ITEM);
+            entries.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
         })
         .build();
 
@@ -90,6 +94,7 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
         Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
         Registry.register(Registries.ITEM, id("launcher"), CHICKEN_LAUNCHER_ITEM);
+        Registry.register(Registries.ITEM, id("incubating_launcher"), INCUBATING_CHICKEN_LAUNCHER_ITEM);
 
         // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
@@ -99,6 +104,7 @@ public class ModContent {
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
             content.add(CHICKEN_LAUNCHER_ITEM);
+            content.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
             content.add(CHICKEN_SPAWN_EGG);

@@ -21,8 +21,16 @@ import net.minecraft.world.World;
 
 public class ItemChickenLauncher extends Item implements ProjectileItem {
 
-    public ItemChickenLauncher(Item.Settings settings) {
+    public enum Variant {
+        REGULAR,
+        INCUBATING
+    }
+
+    private final Variant variant;
+
+    public ItemChickenLauncher(Variant variant, Item.Settings settings) {
         super(settings);
+        this.variant = variant;
     }
 
     @Override
@@ -75,6 +83,10 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
         ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
         egg.setItem(fired);
         return egg;
+    }
+
+    public Variant getVariant() {
+        return this.variant;
     }
 
     public static boolean canFire(PlayerEntity player) {
