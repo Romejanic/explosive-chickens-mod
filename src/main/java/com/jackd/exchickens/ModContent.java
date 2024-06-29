@@ -6,6 +6,8 @@ import com.jackd.exchickens.items.ItemChickenLauncher;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -25,9 +27,11 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class ModContent {
 
@@ -75,6 +79,9 @@ public class ModContent {
         })
         .build();
 
+    // ============ TAGS ============ //
+    public static final TagKey<Biome> TAG_CHICKEN_BIOMES = TagKey.of(RegistryKeys.BIOME, id("chicken_spawn_biomes"));
+
 
     protected static void registerContent() {
         // register all items
@@ -102,6 +109,9 @@ public class ModContent {
 
         // register item group
         Registry.register(Registries.ITEM_GROUP, id("tab"), ITEM_GROUP);
+
+        // add natural spawns for entities
+        BiomeModifications.addSpawn(BiomeSelectors.tag(TAG_CHICKEN_BIOMES), SpawnGroup.CREATURE, EXPLODING_CHICKEN_ENTITY, 5, 1, 32);
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
