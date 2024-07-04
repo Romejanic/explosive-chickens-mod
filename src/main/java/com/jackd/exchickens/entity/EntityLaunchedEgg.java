@@ -1,5 +1,9 @@
 package com.jackd.exchickens.entity;
 
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.EnumUtils;
+
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.items.ItemChickenLauncher.Variant;
 import com.jackd.exchickens.util.ExplosionSizes;
@@ -8,8 +12,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.data.DataTracker.Builder;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
@@ -17,7 +26,7 @@ import net.minecraft.world.World.ExplosionSourceType;
 
 public class EntityLaunchedEgg extends ThrownItemEntity {
 
-    private Variant variant = Variant.REGULAR;
+    private static final TrackedData<String> VARIANT;
 
     public EntityLaunchedEgg(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
@@ -31,12 +40,18 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
         super(ModContent.LAUNCHED_EGG_ENTITY, x, y, z, world);
     }
 
+    @Override
+    protected void initDataTracker(Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(VARIANT, Variant.REGULAR.name());
+    }
+
     public void setVariant(Variant variant) {
-        this.variant = variant;
+        this.dataTracker.set(VARIANT, variant.name());
     }
 
     public Variant getVariant() {
-        return this.variant;
+        return Variant.valueOf(this.dataTracker.get(VARIANT));
     }
 
     private void explode() {
@@ -49,7 +64,7 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
     }
 
     private float getExplosionRange() {
-        return this.variant == Variant.INCUBATING ? ExplosionSizes.chickenExplosion() : ExplosionSizes.launcherExplosion();
+        return this.getVariant() == Variant.INCUBATING ? ExplosionSizes.chickenExplosion() : ExplosionSizes.launcherExplosion();
     }
 
     @Override
@@ -69,6 +84,41 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
     @Override
     protected Item getDefaultItem() {
         return ModContent.TRICK_EGG_ITEM;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        // update rotation manually
+        World world = this.getWorld();
+        if(world.isClient) {
+            Vec3d vel = this.getVelocity();
+            double d = vel.horizontalLength();
+            this.setPitch((float)(MathHelper.atan2(vel.y, d) * MathHelper.DEGREES_PER_RADIAN));
+            this.setYaw((float)(MathHelper.atan2(vel.x, vel.z) * MathHelper.DEGREES_PER_RADIAN));
+        }
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        if(nbt.contains("Variant")) {
+            Variant variant = EnumUtils.getEnum(Variant.class, nbt.getString("Variant"));
+            if(variant != null) {
+                this.setVariant(variant);
+            }
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putString("Variant", this.dataTracker.get(VARIANT));
+    }
+
+    static {
+        VARIANT = DataTracker.registerData(EntityLaunchedEgg.class, TrackedDataHandlerRegistry.STRING);
     }
     
 }
