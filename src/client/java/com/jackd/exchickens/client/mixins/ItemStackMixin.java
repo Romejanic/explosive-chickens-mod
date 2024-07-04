@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.items.ItemChickenLauncher;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +24,7 @@ public abstract class ItemStackMixin {
     @Inject(method="getTooltip", at=@At("RETURN"), cancellable=true)
     private void getTooltip(Item.TooltipContext context, @Nullable PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> info) {
         if(player == null) return;
-        if(!this.isOf(ModContent.CHICKEN_LAUNCHER_ITEM)) return;
+        if(!(this.getItem() instanceof ItemChickenLauncher)) return;
 
         Text ammoText = null;
         
@@ -43,6 +42,6 @@ public abstract class ItemStackMixin {
     }
 
     @Shadow
-    public abstract boolean isOf(Item item);
+    public abstract Item getItem();
 
 }

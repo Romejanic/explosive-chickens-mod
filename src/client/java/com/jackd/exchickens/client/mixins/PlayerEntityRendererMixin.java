@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.jackd.exchickens.ModContent;
+import com.jackd.exchickens.items.ItemChickenLauncher;
 
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -21,7 +21,7 @@ public class PlayerEntityRendererMixin {
     )
     private BipedEntityModel.ArmPose getArmPose(AbstractClientPlayerEntity player, Hand hand) {
         ItemStack heldStack = player.getStackInHand(hand);
-        if(heldStack != null && heldStack.isOf(ModContent.CHICKEN_LAUNCHER_ITEM)) {
+        if(heldStack != null && heldStack.getItem() instanceof ItemChickenLauncher) {
             return ArmPose.BOW_AND_ARROW;
         }
         return PlayerEntityRenderer.getArmPose(player, hand);
