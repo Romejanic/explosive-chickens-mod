@@ -3,6 +3,7 @@ package com.jackd.exchickens.items;
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
@@ -48,6 +49,7 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
             }
             spawnSmokeParticles(user, world);
             consumeAmmo(user, ModContent.TRICK_EGG_ITEM, 1);
+            stack.damage(this.getDamageAmount(), user, LivingEntity.getSlotForHand(hand));
             return TypedActionResult.success(stack, false);
         } else {
             world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS);
@@ -89,6 +91,10 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
 
     public Variant getVariant() {
         return this.variant;
+    }
+
+    public int getDamageAmount() {
+        return this.variant == Variant.INCUBATING ? 5 : 2;
     }
 
     public static boolean canFire(PlayerEntity player) {
