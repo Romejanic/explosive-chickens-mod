@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "S": {
+            "item": "minecraft:stone"
+        },
+        "F": {
+            "item": "minecraft:flint"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "N": {
+            "item": "minecraft:nether_star"
+        }
+    },
+    "pattern": [
+        "SFS",
+        "SIS",
+        "SNS"
+    ],
+    "result": {
+        "count": 1,
+        "id": "exchickens:incubating_launcher"
+    }
+}
