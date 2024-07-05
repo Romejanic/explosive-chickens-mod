@@ -1,7 +1,5 @@
 package com.jackd.exchickens.client.renderer;
 
-import net.minecraft.util.math.Vec3d;
-
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 
 import net.minecraft.client.model.ModelPart;
@@ -41,19 +39,11 @@ public class EntityLaunchedEggRenderer extends EntityRenderer<EntityLaunchedEgg>
         switch(entity.getVariant()) {
             case INCUBATING:
                 matrices.push();
-                // orient model upright
-                matrices.translate(0f, 1.3f, 0f);
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
                 // align model with entity rotation
-                Vec3d vec3d = entity.getVelocity();
-                double d = vec3d.horizontalLength();
-                float pitch = (float)(MathHelper.atan2(vec3d.y, d) * MathHelper.DEGREES_PER_RADIAN);
-                float yyaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * MathHelper.DEGREES_PER_RADIAN);
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(yyaw));
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(pitch));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
                 VertexConsumer consumer = vertexConsumers.getBuffer(LAYER);
                 this.chickenVariantModel.child = false;
-                this.chickenVariantModel.setAngles(entity, 0f, 0f, MathHelper.sin((float)entity.age) * 0.5f + 0.5f, 0f, 0f);
                 this.chickenVariantModel.render(matrices, consumer, light, OverlayTexture.DEFAULT_UV);
                 matrices.pop();
                 break;
