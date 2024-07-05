@@ -42,6 +42,7 @@ public class EntityLaunchedEggRenderer extends EntityRenderer<EntityLaunchedEgg>
                 // align model with entity rotation
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
+                matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float)entity.age * 25.0f));
                 VertexConsumer consumer = vertexConsumers.getBuffer(LAYER);
                 this.chickenVariantModel.child = false;
                 this.chickenVariantModel.render(matrices, consumer, light, OverlayTexture.DEFAULT_UV);
