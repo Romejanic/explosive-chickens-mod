@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class ChickenDotsFeatureRenderer<T extends LivingEntity> extends EyesFeatureRenderer<T, ChickenEntityModel<T>>  {
 
     private static final Identifier TEXTURE = ModContent.id("textures/entity/chicken_dots.png");
-    private static final RenderLayer LAYER = RenderLayer.getEntityDecal(TEXTURE);
+    public static final RenderLayer LAYER = RenderLayer.getEntityDecal(TEXTURE);
 
     public ChickenDotsFeatureRenderer(FeatureRendererContext<T, ChickenEntityModel<T>> featureRendererContext) {
         super(featureRendererContext);

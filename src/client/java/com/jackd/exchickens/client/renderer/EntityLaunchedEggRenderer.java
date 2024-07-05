@@ -2,7 +2,6 @@ package com.jackd.exchickens.client.renderer;
 
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -24,14 +23,12 @@ public class EntityLaunchedEggRenderer extends EntityRenderer<EntityLaunchedEgg>
 
     private final FlyingItemEntityRenderer<EntityLaunchedEgg> eggVariantRenderer;
     private final ChickenEntityModel<EntityLaunchedEgg> chickenVariantModel;
-    private final ModelPart chickenModelRoot;
 
     public EntityLaunchedEggRenderer(Context ctx) {
         super(ctx);
         this.eggVariantRenderer = new FlyingItemEntityRenderer<EntityLaunchedEgg>(ctx);
         TexturedModelData chickenModel = ChickenEntityModel.getTexturedModelData();
-        this.chickenModelRoot = chickenModel.createModel();
-        this.chickenVariantModel = new ChickenEntityModel<>(this.chickenModelRoot);
+        this.chickenVariantModel = new ChickenEntityModel<>(chickenModel.createModel());
     }
 
     @Override
@@ -43,9 +40,13 @@ public class EntityLaunchedEggRenderer extends EntityRenderer<EntityLaunchedEgg>
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
                 matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float)entity.age * 25.0f));
+                // render entity model
                 VertexConsumer consumer = vertexConsumers.getBuffer(LAYER);
                 this.chickenVariantModel.child = false;
                 this.chickenVariantModel.render(matrices, consumer, light, OverlayTexture.DEFAULT_UV);
+                // render chicken dots manually
+                consumer = vertexConsumers.getBuffer(ChickenDotsFeatureRenderer.LAYER);
+                this.chickenVariantModel.render(matrices, consumer, 0xF00000, OverlayTexture.DEFAULT_UV);
                 matrices.pop();
                 break;
             case REGULAR:
