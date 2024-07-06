@@ -49,8 +49,17 @@ public class ModContent {
     public static final EntityType<EntityLaunchedEgg> LAUNCHED_EGG_ENTITY = Registry.register(
         Registries.ENTITY_TYPE,
         id("launched_egg"),
-        EntityType.Builder.<EntityLaunchedEgg>create(EntityLaunchedEgg::new, SpawnGroup.MISC)
+        EntityType.Builder.<EntityLaunchedEgg>create((type, world) -> new EntityLaunchedEgg(type, world, Variant.REGULAR), SpawnGroup.MISC)
             .dimensions(0.25F, 0.25F)
+            .maxTrackingRange(4).trackingTickInterval(10)
+            .build()
+    );
+
+    public static final EntityType<EntityLaunchedEgg> INCUBATING_LAUNCHED_EGG_ENTITY = Registry.register(
+        Registries.ENTITY_TYPE,
+        id("incubating_launched_egg"),
+        EntityType.Builder.<EntityLaunchedEgg>create((type, world) -> new EntityLaunchedEgg(type, world, Variant.INCUBATING), SpawnGroup.MISC)
+            .dimensions(0.4F, 0.7F)
             .maxTrackingRange(4).trackingTickInterval(10)
             .build()
     );

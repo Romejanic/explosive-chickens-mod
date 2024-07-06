@@ -47,9 +47,8 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
             world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.PLAYERS);
             if(!world.isClient) {
                 ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
-                EntityLaunchedEgg egg = new EntityLaunchedEgg(world, user);
+                EntityLaunchedEgg egg = EntityLaunchedEgg.createEntity(world, user, this.variant);
                 egg.setItem(fired);
-                egg.setVariant(this.variant);
                 egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
                 egg.setOnFireForTicks(this.incendiary ? 1000 : 0);
                 world.spawnEntity(egg);
@@ -89,10 +88,9 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
 
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        EntityLaunchedEgg egg = new EntityLaunchedEgg(world, pos.getX(), pos.getY(), pos.getZ());
+        EntityLaunchedEgg egg = EntityLaunchedEgg.createEntity(world, pos, this.variant);
         ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
         egg.setItem(fired);
-        egg.setVariant(this.variant);
         return egg;
     }
 

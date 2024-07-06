@@ -1,8 +1,8 @@
 package com.jackd.exchickens.entity;
 
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
-import org.apache.commons.lang3.EnumUtils;
 
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.items.ItemChickenLauncher.Variant;
@@ -12,13 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.data.DataTracker.Builder;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
@@ -26,32 +21,25 @@ import net.minecraft.world.World.ExplosionSourceType;
 
 public class EntityLaunchedEgg extends ThrownItemEntity {
 
-    private static final TrackedData<String> VARIANT;
+    private final Variant variant;
 
-    public EntityLaunchedEgg(EntityType<? extends ThrownItemEntity> entityType, World world) {
+    public EntityLaunchedEgg(EntityType<? extends ThrownItemEntity> entityType, World world, Variant variant) {
         super(entityType, world);
+        this.variant = variant;
     }
 
-    public EntityLaunchedEgg(World world, LivingEntity owner) {
-        super(ModContent.LAUNCHED_EGG_ENTITY, owner, world);
+    public EntityLaunchedEgg(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, Variant variant) {
+        super(entityType, owner, world);
+        this.variant = variant;
     }
 
-    public EntityLaunchedEgg(World world, double x, double y, double z) {
-        super(ModContent.LAUNCHED_EGG_ENTITY, x, y, z, world);
-    }
-
-    @Override
-    protected void initDataTracker(Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, Variant.REGULAR.name());
-    }
-
-    public void setVariant(Variant variant) {
-        this.dataTracker.set(VARIANT, variant.name());
+    public EntityLaunchedEgg(EntityType<? extends ThrownItemEntity> entityType,World world, double x, double y, double z, Variant variant) {
+        super(entityType, x, y, z, world);
+        this.variant = variant;
     }
 
     public Variant getVariant() {
-        return Variant.valueOf(this.dataTracker.get(VARIANT));
+        return this.variant;
     }
 
     private void explode() {
@@ -100,25 +88,24 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
         }
     }
 
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        if(nbt.contains("Variant")) {
-            Variant variant = EnumUtils.getEnum(Variant.class, nbt.getString("Variant"));
-            if(variant != null) {
-                this.setVariant(variant);
-            }
+    public static final EntityLaunchedEgg createEntity(World world, LivingEntity owner, Variant variant) {
+        switch(variant) {
+            case INCUBATING:
+                return new EntityLaunchedEgg(ModContent.INCUBATING_LAUNCHED_EGG_ENTITY, world, owner, Variant.INCUBATING);
+            case REGULAR:
+            default:
+                return new EntityLaunchedEgg(ModContent.LAUNCHED_EGG_ENTITY, world, owner, Variant.REGULAR);
         }
     }
 
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        nbt.putString("Variant", this.dataTracker.get(VARIANT));
+    public static final EntityLaunchedEgg createEntity(World world, Position pos, Variant variant) {
+        switch(variant) {
+            case INCUBATING:
+                return new EntityLaunchedEgg(ModContent.INCUBATING_LAUNCHED_EGG_ENTITY, world, pos.getX(), pos.getY(), pos.getZ(), Variant.INCUBATING);
+            case REGULAR:
+            default:
+                return new EntityLaunchedEgg(ModContent.LAUNCHED_EGG_ENTITY, world, pos.getX(), pos.getY(), pos.getZ(), Variant.REGULAR);
+        }
     }
 
-    static {
-        VARIANT = DataTracker.registerData(EntityLaunchedEgg.class, TrackedDataHandlerRegistry.STRING);
-    }
-    
 }

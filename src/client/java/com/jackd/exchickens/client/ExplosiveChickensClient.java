@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.client.renderer.EntityExplosiveChickenRenderer;
-import com.jackd.exchickens.client.renderer.EntityLaunchedEggRenderer;
+import com.jackd.exchickens.client.renderer.EntityIncubatingLaunchedEggRenderer;
+import com.jackd.exchickens.entity.EntityLaunchedEgg;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 @Environment(EnvType.CLIENT)
 public class ExplosiveChickensClient implements ClientModInitializer {
@@ -24,7 +26,10 @@ public class ExplosiveChickensClient implements ClientModInitializer {
             return new EntityExplosiveChickenRenderer(context);
         });
         EntityRendererRegistry.register(ModContent.LAUNCHED_EGG_ENTITY, (context) -> {
-            return new EntityLaunchedEggRenderer(context);
+            return new FlyingItemEntityRenderer<EntityLaunchedEgg>(context);
+        });
+        EntityRendererRegistry.register(ModContent.INCUBATING_LAUNCHED_EGG_ENTITY, (context) -> {
+            return new EntityIncubatingLaunchedEggRenderer(context);
         });
 
         LOGGER.info("Registered client renderers for mod");
