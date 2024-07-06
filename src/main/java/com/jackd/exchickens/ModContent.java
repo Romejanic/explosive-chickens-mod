@@ -13,6 +13,8 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.Entity;
@@ -20,6 +22,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
@@ -65,6 +68,9 @@ public class ModContent {
             .build()
     );
 
+    // ============ BLOCKS ============ //
+    public static final Block CHICKEN_TRAP_BLOCK = new Block(AbstractBlock.Settings.create());
+
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
     public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken"));
@@ -104,6 +110,9 @@ public class ModContent {
 
 
     protected static void registerContent() {
+        // register all blocks
+        registerBlock(id("chicken_trap"), CHICKEN_TRAP_BLOCK, ItemGroups.FUNCTIONAL);
+
         // register all items
         Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
         Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
@@ -138,6 +147,28 @@ public class ModContent {
 
         // add natural spawns for entities
         BiomeModifications.addSpawn(BiomeSelectors.tag(TAG_CHICKEN_BIOMES), SpawnGroup.CREATURE, EXPLODING_CHICKEN_ENTITY, 5, 1, 32);
+    }
+
+    private static void registerBlock(Identifier id, Block block, RegistryKey<ItemGroup> creativeTab) {
+        // register the block itself
+        Registry.register(Registries.BLOCK, id, block);
+        
+        // register the block item
+        Item blockItem = new BlockItem(block, new Item.Settings());
+        Registry.register(Registries.ITEM, id, blockItem);
+
+        // add to creative tabs
+        RegistryKey<ItemGroup> modTabKey = RegistryKey.of(Registries.ITEM_GROUP.getKey(), id("tab"));
+        ItemGroupEvents.modifyEntriesEvent(modTabKey).register(content -> {
+            content.add(blockItem);
+        });
+
+        // add to vanilla tab (optional)
+        if(creativeTab != null) {
+            ItemGroupEvents.modifyEntriesEvent(creativeTab).register(content -> {
+                content.add(blockItem);
+            });
+        }
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {
