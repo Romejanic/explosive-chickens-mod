@@ -32,6 +32,7 @@ public class EntityIncubatingLaunchedEggRenderer extends EntityRenderer<EntityLa
     public void render(EntityLaunchedEgg entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
         // align model with entity rotation
+        matrices.translate(0f, 0.4f, 0f);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float)entity.age * 25.0f));
