@@ -58,7 +58,7 @@ public class EntityLaunchedEgg extends ThrownItemEntity {
         World world = this.getEntityWorld();
         if(!world.isClient) {
             Entity owner = this.getOwner();
-            world.createExplosion(owner, this.getX(), this.getY(), this.getZ(), this.getExplosionRange(), ExplosionSourceType.MOB);
+            world.createExplosion(owner, this.getX(), this.getY(), this.getZ(), this.getExplosionRange(), this.isOnFire(), ExplosionSourceType.MOB);
             this.discard();
         }
     }

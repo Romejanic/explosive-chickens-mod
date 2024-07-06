@@ -61,6 +61,8 @@ public class ModContent {
     public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.ofVanilla("cooked_chicken"));
     public static final Item CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, new Item.Settings().maxCount(1).maxDamage(150));
     public static final Item INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
+    public static final Item INCENDIARY_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, true, new Item.Settings().maxCount(1).maxDamage(150));
+    public static final Item INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, true, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
@@ -80,6 +82,8 @@ public class ModContent {
             entries.add(TRICK_COOKED_CHICKEN_ITEM);
             entries.add(CHICKEN_LAUNCHER_ITEM);
             entries.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
+            entries.add(INCENDIARY_CHICKEN_LAUNCHER_ITEM);
+            entries.add(INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
         })
         .build();
 
@@ -95,6 +99,8 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
         Registry.register(Registries.ITEM, id("launcher"), CHICKEN_LAUNCHER_ITEM);
         Registry.register(Registries.ITEM, id("incubating_launcher"), INCUBATING_CHICKEN_LAUNCHER_ITEM);
+        Registry.register(Registries.ITEM, id("incendiary_launcher"), INCENDIARY_CHICKEN_LAUNCHER_ITEM);
+        Registry.register(Registries.ITEM, id("incendiary_incubating_launcher"), INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
 
         // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
@@ -105,6 +111,8 @@ public class ModContent {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
             content.add(CHICKEN_LAUNCHER_ITEM);
             content.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
+            content.add(INCENDIARY_CHICKEN_LAUNCHER_ITEM);
+            content.add(INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
             content.add(CHICKEN_SPAWN_EGG);

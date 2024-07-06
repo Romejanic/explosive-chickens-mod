@@ -6,6 +6,8 @@
     "item.exchickens.exploding_chicken_spawn_egg": "Exploding Chicken Spawn Egg",
     "item.exchickens.launcher": "Exploding Chicken Launcher",
     "item.exchickens.incubating_launcher": "Incubating Exploding Chicken Launcher",
+    "item.exchickens.incendiary_launcher": "Incendiary Exploding Chicken Launcher",
+    "item.exchickens.incendiary_incubating_launcher": "Incendiary Incubating Exploding Chicken Launcher",
 
     "exchickens.launcher.ammo": "Ammo: %s",
     "exchickens.launcher.ammo.infinite": "Infinite",

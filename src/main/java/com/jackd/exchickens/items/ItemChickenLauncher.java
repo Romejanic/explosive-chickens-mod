@@ -28,10 +28,16 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
     }
 
     private final Variant variant;
+    private final boolean incendiary;
 
     public ItemChickenLauncher(Variant variant, Item.Settings settings) {
+        this(variant, false, settings);
+    }
+
+    public ItemChickenLauncher(Variant variant, boolean incendiary, Item.Settings settings) {
         super(settings);
         this.variant = variant;
+        this.incendiary = incendiary;
     }
 
     @Override
@@ -45,6 +51,7 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
                 egg.setItem(fired);
                 egg.setVariant(this.variant);
                 egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
+                egg.setOnFireForTicks(this.incendiary ? 1000 : 0);
                 world.spawnEntity(egg);
             }
             spawnSmokeParticles(user, world);
@@ -91,6 +98,10 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
 
     public Variant getVariant() {
         return this.variant;
+    }
+
+    public boolean isIncendiary() {
+        return this.incendiary;
     }
 
     public int getDamageAmount() {
