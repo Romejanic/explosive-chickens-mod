@@ -158,7 +158,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
 
         World world = this.getWorld();
         if(!world.isClient()) {
-            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), ExplosionSizes.chickenExplosion(), ExplosionSourceType.MOB);
+            world.createExplosion(this, this.getX(), this.getY(), this.getZ(), ExplosionSizes.chickenExplosion(), this.isOnFire(), ExplosionSourceType.MOB);
             this.getWorld().sendEntityStatus(this, STATUS_FIREWORK_EXPLODE);
             if(this.isFireworkIgnited()) {
                 this.dropItem(ModContent.TRICK_COOKED_CHICKEN_ITEM);
@@ -170,7 +170,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     private void explodeFireworks() {
         if(!this.hasFireworkAttached()) return;
         ItemStack itemStack = this.getFireworkStack();
-        FireworksComponent fireworksComponent = (FireworksComponent)itemStack.get(DataComponentTypes.FIREWORKS);
+        FireworksComponent fireworksComponent = itemStack.get(DataComponentTypes.FIREWORKS);
         if(fireworksComponent != null) {
             List<FireworkExplosionComponent> explosions = fireworksComponent.explosions();
             Vec3d velocity = this.getVelocity();
