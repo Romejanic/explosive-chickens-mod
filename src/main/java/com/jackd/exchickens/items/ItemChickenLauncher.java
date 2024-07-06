@@ -50,7 +50,9 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
                 EntityLaunchedEgg egg = EntityLaunchedEgg.createEntity(world, user, this.variant);
                 egg.setItem(fired);
                 egg.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 3.5f, 1f);
-                egg.setOnFireForTicks(this.incendiary ? 1000 : 0);
+                if(this.incendiary) {
+                    egg.setOnFireForTicks(1000);
+                }
                 world.spawnEntity(egg);
             }
             spawnSmokeParticles(user, world);
@@ -91,6 +93,9 @@ public class ItemChickenLauncher extends Item implements ProjectileItem {
         EntityLaunchedEgg egg = EntityLaunchedEgg.createEntity(world, pos, this.variant);
         ItemStack fired = new ItemStack(ModContent.TRICK_EGG_ITEM);
         egg.setItem(fired);
+        if(this.incendiary) {
+            egg.setOnFireForTicks(1000);
+        }
         return egg;
     }
 
