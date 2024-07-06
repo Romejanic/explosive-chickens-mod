@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "S": {
+            "item": "minecraft:stone"
+        },
+        "F": {
+            "item": "minecraft:fire_charge"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "N": {
+            "item": "minecraft:nether_star"
+        }
+    },
+    "pattern": [
+        "SFS",
+        "SIS",
+        "SNS"
+    ],
+    "result": {
+        "count": 1,
+        "id": "exchickens:incendiary_incubating_launcher"
+    }
+}
