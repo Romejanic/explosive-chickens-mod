@@ -1,5 +1,6 @@
 package com.jackd.exchickens;
 
+import com.google.common.collect.Lists;
 import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 import com.jackd.exchickens.items.ItemChickenLauncher;
@@ -85,14 +86,16 @@ public class ModContent {
         .icon(() -> new ItemStack(CHICKEN_SPAWN_EGG))
         .displayName(Text.translatable("itemGroup.exchickens.tab"))
         .entries((ctx, entries) -> {
-            entries.add(CHICKEN_SPAWN_EGG);
-            entries.add(TRICK_EGG_ITEM);
-            entries.add(TRICK_RAW_CHICKEN_ITEM);
-            entries.add(TRICK_COOKED_CHICKEN_ITEM);
-            entries.add(CHICKEN_LAUNCHER_ITEM);
-            entries.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
-            entries.add(INCENDIARY_CHICKEN_LAUNCHER_ITEM);
-            entries.add(INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
+            entries.addAll(Lists.newArrayList(
+                CHICKEN_SPAWN_EGG,
+                TRICK_EGG_ITEM,
+                TRICK_RAW_CHICKEN_ITEM,
+                TRICK_COOKED_CHICKEN_ITEM,
+                CHICKEN_LAUNCHER_ITEM,
+                INCUBATING_CHICKEN_LAUNCHER_ITEM,
+                INCENDIARY_CHICKEN_LAUNCHER_ITEM,
+                INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM
+            ).stream().map(i -> new ItemStack(i)).toList());
         })
         .build();
 
