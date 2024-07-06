@@ -22,7 +22,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "modid" {
+        "exchickens" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
