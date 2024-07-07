@@ -1,5 +1,6 @@
 {
     "credit": "Made with Blockbench",
+    "ambientocclusion": false,
     "texture_size": [64, 32],
     "textures": {
         "0": "exchickens:block/chicken_trap",

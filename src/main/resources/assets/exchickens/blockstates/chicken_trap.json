@@ -1,5 +1,19 @@
 {
     "variants": {
-        "": { "model": "exchickens:block/chicken_trap" }
+        "facing=north": {
+            "model": "exchickens:block/chicken_trap"
+        },
+        "facing=east": {
+            "model": "exchickens:block/chicken_trap",
+            "y": 270
+        },
+        "facing=south": {
+            "model": "exchickens:block/chicken_trap",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "exchickens:block/chicken_trap",
+            "y": 90
+        }
     }
 }

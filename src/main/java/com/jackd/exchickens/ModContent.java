@@ -1,6 +1,7 @@
 package com.jackd.exchickens;
 
 import com.google.common.collect.Lists;
+import com.jackd.exchickens.block.BlockChickenTrap;
 import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
 import com.jackd.exchickens.items.ItemChickenLauncher;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.Entity;
@@ -34,6 +36,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -69,7 +72,7 @@ public class ModContent {
     );
 
     // ============ BLOCKS ============ //
-    public static final Block CHICKEN_TRAP_BLOCK = new Block(AbstractBlock.Settings.create());
+    public static final Block CHICKEN_TRAP_BLOCK = new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY));
 
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
