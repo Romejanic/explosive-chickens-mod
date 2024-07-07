@@ -1,6 +1,3 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "block/stone"
-    }
+    "parent": "exchickens:block/chicken_trap_inactive"
 }
