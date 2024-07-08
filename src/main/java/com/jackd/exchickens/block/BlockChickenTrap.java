@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager.Builder;
 
 public class BlockChickenTrap extends HorizontalFacingBlock {
@@ -13,6 +14,10 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
 
     public BlockChickenTrap(Settings settings) {
         super(settings);
+    }
+
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return (BlockState)this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
