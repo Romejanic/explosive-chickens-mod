@@ -1,18 +1,33 @@
 {
     "variants": {
-        "facing=north": {
-            "model": "exchickens:block/chicken_trap"
+        "active=false,facing=north": {
+            "model": "exchickens:block/chicken_trap_inactive"
         },
-        "facing=east": {
-            "model": "exchickens:block/chicken_trap",
+        "active=false,facing=east": {
+            "model": "exchickens:block/chicken_trap_inactive",
             "y": 270
         },
-        "facing=south": {
-            "model": "exchickens:block/chicken_trap",
+        "active=false,facing=south": {
+            "model": "exchickens:block/chicken_trap_inactive",
             "y": 180
         },
-        "facing=west": {
-            "model": "exchickens:block/chicken_trap",
+        "active=false,facing=west": {
+            "model": "exchickens:block/chicken_trap_inactive",
+            "y": 90
+        },
+        "active=true,facing=north": {
+            "model": "exchickens:block/chicken_trap_active"
+        },
+        "active=true,facing=east": {
+            "model": "exchickens:block/chicken_trap_active",
+            "y": 270
+        },
+        "active=true,facing=south": {
+            "model": "exchickens:block/chicken_trap_active",
+            "y": 180
+        },
+        "active=true,facing=west": {
+            "model": "exchickens:block/chicken_trap_active",
             "y": 90
         }
     }
