@@ -14,6 +14,8 @@ import com.jackd.exchickens.util.ItemUtils;
 import com.jackd.exchickens.util.MathUtils;
 import com.jackd.exchickens.util.NbtUtils;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
@@ -48,6 +50,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EntityView;
@@ -60,6 +64,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     private static final TrackedData<Integer> FIREWORK_FUSE;
     private static final TrackedData<Vector3f> LAUNCH_DIRECTION;
     private static final TrackedData<Optional<UUID>> OWNER_UUID;
+    private static final TrackedData<Optional<BlockPos>> TRAPPED_POS;
     private static final byte STATUS_FIREWORK_EXPLODE = 17;
     private static final byte STATUS_TAME_SUCCESS = 18;
     private static final byte STATUS_TAME_FAILURE = 19;
@@ -79,6 +84,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         builder.add(FIREWORK_FUSE, -1);
         builder.add(LAUNCH_DIRECTION, MathUtils.ZERO);
         builder.add(OWNER_UUID, Optional.empty());
+        builder.add(TRAPPED_POS, Optional.empty());
     }
 
     @Override
@@ -126,6 +132,24 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         super.tick();
         if(this.willExplode) {
             this.explode();
+        }
+        // check if chicken is trapped
+        if(this.isTrapped()) {
+            this.setAiDisabled(true);
+            this.flapSpeed = 0f;
+            BlockPos pos = this.getTrappedBlockPos().get();
+            BlockState trapState = this.getWorld().getBlockState(pos);
+            this.setPosition(pos.getX(), pos.getY(), pos.getZ());
+            if(trapState.getBlock() == ModContent.CHICKEN_TRAP_BLOCK) {
+                // align chicken with block
+                Direction direction = trapState.get(HorizontalFacingBlock.FACING);
+                this.setBodyYaw(direction.asRotation());
+            } else {
+                // trap was broken/removed, untrap the chicken
+                this.setTrappedBlockPos(null);
+            }
+        } else {
+            this.setAiDisabled(false);
         }
         // is the firework on the chicken currently lit?
         if(this.hasFireworkAttached() && this.isFireworkIgnited()) {
@@ -282,6 +306,22 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
     public boolean isOwner(LivingEntity other) {
         return this.isTamed() && other.getUuid().equals(this.getOwnerUuid());
     }
+
+    public Optional<BlockPos> getTrappedBlockPos() {
+        return this.dataTracker.get(TRAPPED_POS);
+    }
+
+    public boolean isTrapped() {
+        return this.getTrappedBlockPos().isPresent();
+    }
+
+    public void setTrappedBlockPos(BlockPos pos) {
+        if(pos != null) {
+            this.dataTracker.set(TRAPPED_POS, Optional.of(pos));
+        } else {
+            this.dataTracker.set(TRAPPED_POS, Optional.empty());
+        }
+    }
     
     @Override
     public boolean collidesWith(Entity other) {
@@ -320,6 +360,8 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         if(uuid != null) {
             this.setOwnerUUID(uuid);
         }
+        // set trapped block pos (if present)
+        this.dataTracker.set(TRAPPED_POS, NbtUtils.readBlockPos(nbt, "TrappedPos"));
     }
 
     @Override
@@ -334,6 +376,9 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         }
         if(this.getOwnerUuid() != null) {
             nbt.putUuid("Owner", this.getOwnerUuid());
+        }
+        if(this.isTrapped()) {
+            NbtUtils.writeBlockPos(nbt, "TrappedPos", this.getTrappedBlockPos().get());
         }
     }
 
@@ -390,6 +435,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         FIREWORK_FUSE = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.INTEGER);
         LAUNCH_DIRECTION = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.VECTOR3F);
         OWNER_UUID = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+        TRAPPED_POS = DataTracker.registerData(EntityExplodingChicken.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_POS);
     }
 
 }

@@ -72,7 +72,7 @@ public class ModContent {
     );
 
     // ============ BLOCKS ============ //
-    public static final Block CHICKEN_TRAP_BLOCK = new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block CHICKEN_TRAP_BLOCK = new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY));
 
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));

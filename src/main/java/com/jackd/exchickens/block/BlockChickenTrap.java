@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
 
+import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.util.ExplosionSizes;
 
 public class BlockChickenTrap extends HorizontalFacingBlock {
@@ -37,6 +39,18 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
     private void explode(World world, BlockPos pos) {
         if(world.isClient) return;
         world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), ExplosionSizes.chickenExplosion(), ExplosionSourceType.BLOCK);
+    }
+
+    @Override
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        super.onEntityCollision(state, world, pos, entity);
+        // don't trigger if on client or already armed
+        if(world.isClient || state.get(ACTIVE)) return;
+        // check if an exploding chicken is on the plate
+        if(entity instanceof EntityExplodingChicken chicken && !chicken.isTamed()) {
+            world.setBlockState(pos, state.with(ACTIVE, true));
+            chicken.setTrappedBlockPos(pos);
+        }
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
