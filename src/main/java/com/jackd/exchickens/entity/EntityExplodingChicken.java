@@ -317,6 +317,11 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         return this.getTrappedBlockPos().isPresent();
     }
 
+    public boolean isTrappedAt(BlockPos pos) {
+        if(!this.isTrapped()) return false;
+        return this.getTrappedBlockPos().get().equals(pos);
+    }
+
     public void setTrappedBlockPos(BlockPos pos) {
         if(pos != null) {
             this.dataTracker.set(TRAPPED_POS, Optional.of(pos));
@@ -324,11 +329,11 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
             this.dataTracker.set(TRAPPED_POS, Optional.empty());
         }
     }
-    
+
     @Override
     public boolean collidesWith(Entity other) {
         if(other instanceof PlayerEntity) {
-            this.willExplode = !this.isTamed();
+            this.willExplode = !this.isTamed() && !this.isTrapped();
         }
         return super.collidesWith(other);
     }

@@ -9,18 +9,20 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.World.ExplosionSourceType;
 
 import com.jackd.exchickens.entity.EntityExplodingChicken;
-import com.jackd.exchickens.util.ExplosionSizes;
+
+import java.util.List;
 
 public class BlockChickenTrap extends HorizontalFacingBlock {
 
@@ -38,14 +40,18 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
     protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
         if(state.get(ACTIVE) && world.isReceivingRedstonePower(pos)) {
-            world.setBlockState(pos, Blocks.AIR.getDefaultState());
-            this.explode(world, pos);
+            // when powered, find the chicken trapped by the block and explode it
+            List<EntityExplodingChicken> chickens = world.getEntitiesByClass(EntityExplodingChicken.class, Box.enclosing(pos, pos), EntityPredicates.VALID_ENTITY);
+            if(chickens != null && chickens.size() > 0) {
+                for(EntityExplodingChicken chicken : chickens) {
+                    if(chicken.isTrappedAt(pos)) {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                        chicken.explode();
+                        break;
+                    }
+                }
+            }
         }
-    }
-
-    private void explode(World world, BlockPos pos) {
-        if(world.isClient) return;
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), ExplosionSizes.chickenExplosion(), ExplosionSourceType.BLOCK);
     }
 
     @Override
