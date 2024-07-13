@@ -9,7 +9,6 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.function.BooleanBiFunction;
@@ -28,6 +27,7 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
 
     public static final MapCodec<BlockChickenTrap> CODEC = createCodec(BlockChickenTrap::new);
     public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
+
     private static final VoxelShape SHAPE_Z;
     private static final VoxelShape SHAPE_X;
 
@@ -41,15 +41,13 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
         if(state.get(ACTIVE) && world.isReceivingRedstonePower(pos)) {
             // when powered, find the chicken trapped by the block and explode it
-            List<EntityExplodingChicken> chickens = world.getEntitiesByClass(EntityExplodingChicken.class, Box.enclosing(pos, pos), EntityPredicates.VALID_ENTITY);
+            List<EntityExplodingChicken> chickens = world.getEntitiesByClass(EntityExplodingChicken.class, Box.enclosing(pos, pos),
+                (entity) -> entity instanceof EntityExplodingChicken chicken && chicken.isTrappedAt(pos)
+            );
             if(chickens != null && chickens.size() > 0) {
-                for(EntityExplodingChicken chicken : chickens) {
-                    if(chicken.isTrappedAt(pos)) {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState());
-                        chicken.explode();
-                        break;
-                    }
-                }
+                EntityExplodingChicken chicken = chickens.get(0);
+                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                chicken.explode();
             }
         }
     }
