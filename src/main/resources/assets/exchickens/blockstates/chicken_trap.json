@@ -5,7 +5,7 @@
         },
         "active=false,facing=east": {
             "model": "exchickens:block/chicken_trap_inactive",
-            "y": 270
+            "y": 90
         },
         "active=false,facing=south": {
             "model": "exchickens:block/chicken_trap_inactive",
@@ -13,14 +13,14 @@
         },
         "active=false,facing=west": {
             "model": "exchickens:block/chicken_trap_inactive",
-            "y": 90
+            "y": 270
         },
         "active=true,facing=north": {
             "model": "exchickens:block/chicken_trap_active"
         },
         "active=true,facing=east": {
             "model": "exchickens:block/chicken_trap_active",
-            "y": 270
+            "y": 90
         },
         "active=true,facing=south": {
             "model": "exchickens:block/chicken_trap_active",
@@ -28,7 +28,7 @@
         },
         "active=true,facing=west": {
             "model": "exchickens:block/chicken_trap_active",
-            "y": 90
+            "y": 270
         }
     }
 }
