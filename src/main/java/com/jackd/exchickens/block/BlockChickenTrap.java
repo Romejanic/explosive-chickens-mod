@@ -41,7 +41,7 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
         if(state.get(ACTIVE) && world.isReceivingRedstonePower(pos)) {
             // when powered, find the chicken trapped by the block and explode it
-            List<EntityExplodingChicken> chickens = world.getEntitiesByClass(EntityExplodingChicken.class, Box.enclosing(pos, pos),
+            List<EntityExplodingChicken> chickens = world.getEntitiesByClass(EntityExplodingChicken.class, new Box(pos),
                 (entity) -> entity.isAlive() && entity.isTrappedAt(pos)
             );
             if(chickens != null && chickens.size() > 0) {
