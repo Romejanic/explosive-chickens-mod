@@ -139,13 +139,15 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
             this.flapSpeed = 0f;
             BlockPos pos = this.getTrappedBlockPos().get();
             BlockState trapState = this.getWorld().getBlockState(pos);
-            this.setPosition(pos.getX(), pos.getY(), pos.getZ());
+            this.setPosition(pos.getX() + 0.5d, pos.getY() - 0.25d, pos.getZ() + 0.5d);
             if(trapState.getBlock() == ModContent.CHICKEN_TRAP_BLOCK) {
                 // align chicken with block
                 Direction direction = trapState.get(HorizontalFacingBlock.FACING);
                 this.setBodyYaw(direction.asRotation());
+                this.setHeadYaw(direction.asRotation());
             } else {
                 // trap was broken/removed, untrap the chicken
+                this.setPos(this.getX(), this.getY() + 0.4d, this.getZ());
                 this.setTrappedBlockPos(null);
             }
         } else {
