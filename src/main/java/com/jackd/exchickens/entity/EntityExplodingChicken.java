@@ -136,6 +136,7 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
         // check if chicken is trapped
         if(this.isTrapped()) {
             this.setAiDisabled(true);
+            this.setOnGround(true);
             this.flapSpeed = 0f;
             BlockPos pos = this.getTrappedBlockPos().get();
             BlockState trapState = this.getWorld().getBlockState(pos);
