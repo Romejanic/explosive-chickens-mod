@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponents;
@@ -150,6 +151,9 @@ public class ModContent {
 
         // add natural spawns for entities
         BiomeModifications.addSpawn(BiomeSelectors.tag(TAG_CHICKEN_BIOMES), SpawnGroup.CREATURE, EXPLODING_CHICKEN_ENTITY, 5, 1, 32);
+
+        // register dispenser behaviours
+        DispenserBlock.registerProjectileBehavior(TRICK_EGG_ITEM);
     }
 
     private static void registerBlock(Identifier id, Block block, RegistryKey<ItemGroup> creativeTab) {
