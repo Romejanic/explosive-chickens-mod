@@ -25,12 +25,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -38,10 +41,16 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class ModContent {
 
@@ -75,6 +84,21 @@ public class ModContent {
     // ============ BLOCKS ============ //
     public static final Block CHICKEN_TRAP_BLOCK = new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY));
 
+    // ============ ARMOR MATERIALS ============ //
+    public static final RegistryEntry<ArmorMaterial> CHICKEN_ARMOR = registerArmorMaterial("chicken",
+        Map.of(
+            ArmorItem.Type.HELMET, 2,
+            ArmorItem.Type.CHESTPLATE, 3,
+            ArmorItem.Type.LEGGINGS, 2,
+            ArmorItem.Type.BOOTS, 1
+        ), 
+        5,
+        RegistryEntry.of(SoundEvents.ENTITY_SLIME_SQUISH),
+        () -> Ingredient.ofItems(ModContent.TRICK_RAW_CHICKEN_ITEM),
+        1.0F,
+        0.0F
+    );
+
     // ============ ITEMS ============ //
     public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
     public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken"));
@@ -83,6 +107,11 @@ public class ModContent {
     public static final Item INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
     public static final Item INCENDIARY_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, true, new Item.Settings().maxCount(1).maxDamage(150));
     public static final Item INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, true, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
+
+    public static final Item CHICKEN_HELMET = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)));
+    public static final Item CHICKEN_CHESTPLATE = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
+    public static final Item CHICKEN_LEGGINGS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
+    public static final Item CHICKEN_BOOTS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
@@ -104,7 +133,11 @@ public class ModContent {
                 CHICKEN_LAUNCHER_ITEM,
                 INCUBATING_CHICKEN_LAUNCHER_ITEM,
                 INCENDIARY_CHICKEN_LAUNCHER_ITEM,
-                INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM
+                INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM,
+                CHICKEN_HELMET,
+                CHICKEN_CHESTPLATE,
+                CHICKEN_LEGGINGS,
+                CHICKEN_BOOTS
             ).stream().map(i -> new ItemStack(i)).toList());
         })
         .build();
@@ -126,6 +159,10 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("incubating_launcher"), INCUBATING_CHICKEN_LAUNCHER_ITEM);
         Registry.register(Registries.ITEM, id("incendiary_launcher"), INCENDIARY_CHICKEN_LAUNCHER_ITEM);
         Registry.register(Registries.ITEM, id("incendiary_incubating_launcher"), INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
+        Registry.register(Registries.ITEM, id("chicken_helmet"), CHICKEN_HELMET);
+        Registry.register(Registries.ITEM, id("chicken_chestplate"), CHICKEN_CHESTPLATE);
+        Registry.register(Registries.ITEM, id("chicken_leggings"), CHICKEN_LEGGINGS);
+        Registry.register(Registries.ITEM, id("chicken_boots"), CHICKEN_BOOTS);
 
         // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
@@ -138,6 +175,10 @@ public class ModContent {
             content.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
             content.add(INCENDIARY_CHICKEN_LAUNCHER_ITEM);
             content.add(INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
+            content.add(CHICKEN_HELMET);
+            content.add(CHICKEN_CHESTPLATE);
+            content.add(CHICKEN_LEGGINGS);
+            content.add(CHICKEN_BOOTS);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
             content.add(CHICKEN_SPAWN_EGG);
@@ -176,6 +217,19 @@ public class ModContent {
                 content.add(blockItem);
             });
         }
+    }
+
+    private static RegistryEntry<ArmorMaterial> registerArmorMaterial(String name, Map<ArmorItem.Type, Integer> defense, int enchantability, RegistryEntry<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, float toughness, float knockbackResist) {
+        Identifier id = id(name);
+        List<ArmorMaterial.Layer> layers = List.of(
+            new ArmorMaterial.Layer(id, "", false)
+        );
+        ArmorMaterial material = Registry.register(
+            Registries.ARMOR_MATERIAL,
+            id,
+            new ArmorMaterial(defense, enchantability, equipSound, repairIngredient, layers, toughness, knockbackResist)
+        );
+        return RegistryEntry.of(material);
     }
 
     public static DamageSource dmgSource(World world, RegistryKey<DamageType> key) {

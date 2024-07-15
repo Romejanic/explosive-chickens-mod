@@ -10,6 +10,10 @@
     "item.exchickens.incubating_launcher": "Incubating Exploding Chicken Launcher",
     "item.exchickens.incendiary_launcher": "Incendiary Exploding Chicken Launcher",
     "item.exchickens.incendiary_incubating_launcher": "Incendiary Incubating Exploding Chicken Launcher",
+    "item.exchickens.chicken_helmet": "Exploding Chicken Helmet",
+    "item.exchickens.chicken_chestplate": "Exploding Chicken Chestplate",
+    "item.exchickens.chicken_leggings": "Exploding Chicken Leggings",
+    "item.exchickens.chicken_boots": "Exploding Chicken Boots",
 
     "exchickens.launcher.ammo": "Ammo: %s",
     "exchickens.launcher.ammo.infinite": "Infinite",
