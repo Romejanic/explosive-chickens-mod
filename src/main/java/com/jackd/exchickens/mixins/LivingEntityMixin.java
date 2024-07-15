@@ -26,10 +26,10 @@ public abstract class LivingEntityMixin extends Entity {
         super(null, null);
     }
 
-    @Inject(method="onKilledBy", at=@At("TAIL"))
-    private void onKilledBy(LivingEntity adversary, CallbackInfo info) {
+    @Inject(method="dropInventory", at=@At("HEAD"))
+    private void dropInventory(CallbackInfo info) {
         World world = this.getWorld();
-        if(!world.isClient && adversary != null) {
+        if(!world.isClient) {
             Averager explosionPowerAvg = new Averager();
             for(ItemStack armorStack : this.getArmorItems()) {
                 if(armorStack.getItem() instanceof ArmorItem armorItem && this.isChickenArmor(armorItem.getMaterial())) {
