@@ -23,6 +23,7 @@
         ]
     },
     "mixins": [
+        "exchickens.mixins.json",
         {
             "config": "exchickens.client.mixins.json",
             "environment": "client"
