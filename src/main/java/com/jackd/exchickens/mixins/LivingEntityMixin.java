@@ -36,9 +36,9 @@ public abstract class LivingEntityMixin extends Entity {
                     explosionPowerAvg.add(ExplosionSizes.chickenArmor(armorItem.getType()));
                 }
             }
-            float power = explosionPowerAvg.getAverage();
-            if(power > 0f) {
-                world.createExplosion(this, this.getX(), this.getY(), this.getZ(), power, ExplosionSourceType.MOB);
+            float explosionPower = explosionPowerAvg.getAverage();
+            if(explosionPower > 0f) {
+                world.createExplosion(this, this.getX(), this.getY(), this.getZ(), explosionPower, ExplosionSourceType.MOB);
             }
         }
     }

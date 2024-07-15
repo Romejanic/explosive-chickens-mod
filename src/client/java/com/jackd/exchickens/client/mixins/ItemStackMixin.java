@@ -1,17 +1,22 @@
 package com.jackd.exchickens.client.mixins;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.jackd.exchickens.ModContent;
 import com.jackd.exchickens.items.ItemChickenLauncher;
 
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -39,6 +44,13 @@ public abstract class ItemStackMixin {
         List<Text> tooltip = info.getReturnValue();
         tooltip.add(Text.translatable("exchickens.launcher.ammo", ammoText).formatted(Formatting.GRAY));
         info.setReturnValue(tooltip);
+    }
+
+    @Inject(method="appendAttributeModifiersTooltip", at=@At("TAIL"))
+    private void appendAttributeModifiersTooltip(Consumer<Text> textConsumer, @Nullable PlayerEntity player, CallbackInfo info) {
+        if(this.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ModContent.CHICKEN_ARMOR) {
+            textConsumer.accept(Text.translatable("attribute.modifier.chicken_blast").formatted(EntityAttribute.Category.POSITIVE.getFormatting(true)));
+        }
     }
 
     @Shadow
