@@ -23,7 +23,7 @@ public class ExplosiveChickenArmor {
             }
             if(multiplier > 0f) {
                 float explosionPower = ExplosionSizes.chickenArmor() * multiplier;
-                world.createExplosion(entity, entity.getX(), entity.getY(), entity.getZ(), explosionPower, ExplosionSourceType.MOB);
+                world.createExplosion(entity, entity.getX(), entity.getY(), entity.getZ(), explosionPower, entity.isOnFire(), ExplosionSourceType.MOB);
             }
         }
     }
