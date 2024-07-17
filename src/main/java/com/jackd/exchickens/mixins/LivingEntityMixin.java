@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jackd.exchickens.ModContent;
-import com.jackd.exchickens.util.Averager;
 import com.jackd.exchickens.util.ExplosionSizes;
 
 import net.minecraft.entity.Entity;
@@ -30,14 +29,14 @@ public abstract class LivingEntityMixin extends Entity {
     private void dropInventory(CallbackInfo info) {
         World world = this.getWorld();
         if(!world.isClient) {
-            Averager explosionPowerAvg = new Averager();
+            float multiplier = 0f;
             for(ItemStack armorStack : this.getArmorItems()) {
                 if(armorStack.getItem() instanceof ArmorItem armorItem && this.isChickenArmor(armorItem.getMaterial())) {
-                    explosionPowerAvg.add(ExplosionSizes.chickenArmor(armorItem.getType()));
+                    multiplier += armorItem.getType().getMaxDamage(1) / 10.0f;
                 }
             }
-            float explosionPower = explosionPowerAvg.getAverage();
-            if(explosionPower > 0f) {
+            if(multiplier > 0f) {
+                float explosionPower = ExplosionSizes.chickenArmor() * multiplier;
                 world.createExplosion(this, this.getX(), this.getY(), this.getZ(), explosionPower, ExplosionSourceType.MOB);
             }
         }
