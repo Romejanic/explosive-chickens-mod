@@ -8,6 +8,7 @@ import com.jackd.exchickens.items.ItemChickenLauncher;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
 import com.jackd.exchickens.items.ItemChickenLauncher.Variant;
+import com.mojang.serialization.Codec;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -18,6 +19,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.Entity;
@@ -97,6 +99,13 @@ public class ModContent {
         () -> Ingredient.ofItems(ModContent.TRICK_RAW_CHICKEN_ITEM),
         1.0F,
         0.0F
+    );
+
+    // ============ COMPONENT TYPES ============ //
+    public static final ComponentType<Float> ARMOR_COOK_TIME_COMPONENT = Registry.register(
+        Registries.DATA_COMPONENT_TYPE,
+        id("armor_cook_time"),
+        ComponentType.<Float>builder().codec(Codec.FLOAT).build()
     );
 
     // ============ ITEMS ============ //

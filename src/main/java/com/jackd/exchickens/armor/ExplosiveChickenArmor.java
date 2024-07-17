@@ -13,10 +13,10 @@ import net.minecraft.world.World.ExplosionSourceType;
 
 public class ExplosiveChickenArmor {
 
-    public static void handleEntityDeath(Entity entity, World world, Iterable<ItemStack> iterable) {
+    public static void handleEntityDeath(Entity entity, World world, Iterable<ItemStack> armorItems) {
         if(!world.isClient) {
             float multiplier = 0f;
-            for(ItemStack armorStack : iterable) {
+            for(ItemStack armorStack : armorItems) {
                 if(armorStack.getItem() instanceof ArmorItem armorItem && isChickenArmor(armorItem.getMaterial())) {
                     multiplier += armorItem.getType().getMaxDamage(1) / 10.0f;
                 }
