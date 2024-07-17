@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.jackd.exchickens.block.BlockChickenTrap;
 import com.jackd.exchickens.entity.EntityExplodingChicken;
 import com.jackd.exchickens.entity.EntityLaunchedEgg;
+import com.jackd.exchickens.items.ItemArmorCookable;
 import com.jackd.exchickens.items.ItemChickenLauncher;
 import com.jackd.exchickens.items.ItemTrickEgg;
 import com.jackd.exchickens.items.ItemTrickFood;
@@ -117,10 +118,10 @@ public class ModContent {
     public static final Item INCENDIARY_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, true, new Item.Settings().maxCount(1).maxDamage(150));
     public static final Item INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, true, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
 
-    public static final Item CHICKEN_HELMET = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)));
-    public static final Item CHICKEN_CHESTPLATE = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
-    public static final Item CHICKEN_LEGGINGS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
-    public static final Item CHICKEN_BOOTS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
+    public static final Item CHICKEN_HELMET = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)));
+    public static final Item CHICKEN_CHESTPLATE = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
+    public static final Item CHICKEN_LEGGINGS = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
+    public static final Item CHICKEN_BOOTS = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
