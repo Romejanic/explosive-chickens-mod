@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "C": {
+            "item": "exchickens:chicken"
+        }
+    },
+    "pattern": [
+        "C C",
+        "C C"
+    ],
+    "result": {
+        "count": 1,
+        "id": "exchickens:chicken_boots"
+    }
+}
