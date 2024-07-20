@@ -101,6 +101,19 @@ public class ModContent {
         1.0F,
         0.0F
     );
+    public static final RegistryEntry<ArmorMaterial> COOKED_CHICKEN_ARMOR = registerArmorMaterial("cooked_chicken",
+        Map.of(
+            ArmorItem.Type.HELMET, 2,
+            ArmorItem.Type.CHESTPLATE, 3,
+            ArmorItem.Type.LEGGINGS, 2,
+            ArmorItem.Type.BOOTS, 1
+        ), 
+        5,
+        RegistryEntry.of(SoundEvents.ENTITY_SLIME_SQUISH),
+        () -> Ingredient.ofItems(ModContent.TRICK_COOKED_CHICKEN_ITEM),
+        1.2F,
+        0.1F
+    );
 
     // ============ COMPONENT TYPES ============ //
     public static final ComponentType<Float> ARMOR_COOK_TIME_COMPONENT = Registry.register(
@@ -122,6 +135,10 @@ public class ModContent {
     public static final Item CHICKEN_CHESTPLATE = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
     public static final Item CHICKEN_LEGGINGS = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
     public static final Item CHICKEN_BOOTS = new ItemArmorCookable(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
+    public static final Item COOKED_CHICKEN_HELMET = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)));
+    public static final Item COOKED_CHICKEN_CHESTPLATE = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
+    public static final Item COOKED_CHICKEN_LEGGINGS = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
+    public static final Item COOKED_CHICKEN_BOOTS = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
 
     public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
 
@@ -147,7 +164,11 @@ public class ModContent {
                 CHICKEN_HELMET,
                 CHICKEN_CHESTPLATE,
                 CHICKEN_LEGGINGS,
-                CHICKEN_BOOTS
+                CHICKEN_BOOTS,
+                COOKED_CHICKEN_HELMET,
+                COOKED_CHICKEN_CHESTPLATE,
+                COOKED_CHICKEN_LEGGINGS,
+                COOKED_CHICKEN_BOOTS
             ).stream().map(i -> new ItemStack(i)).toList());
         })
         .build();
@@ -173,6 +194,10 @@ public class ModContent {
         Registry.register(Registries.ITEM, id("chicken_chestplate"), CHICKEN_CHESTPLATE);
         Registry.register(Registries.ITEM, id("chicken_leggings"), CHICKEN_LEGGINGS);
         Registry.register(Registries.ITEM, id("chicken_boots"), CHICKEN_BOOTS);
+        Registry.register(Registries.ITEM, id("cooked_chicken_helmet"), COOKED_CHICKEN_HELMET);
+        Registry.register(Registries.ITEM, id("cooked_chicken_chestplate"), COOKED_CHICKEN_CHESTPLATE);
+        Registry.register(Registries.ITEM, id("cooked_chicken_leggings"), COOKED_CHICKEN_LEGGINGS);
+        Registry.register(Registries.ITEM, id("cooked_chicken_boots"), COOKED_CHICKEN_BOOTS);
 
         // add items to vanilla groups
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
@@ -189,6 +214,10 @@ public class ModContent {
             content.add(CHICKEN_CHESTPLATE);
             content.add(CHICKEN_LEGGINGS);
             content.add(CHICKEN_BOOTS);
+            content.add(COOKED_CHICKEN_HELMET);
+            content.add(COOKED_CHICKEN_CHESTPLATE);
+            content.add(COOKED_CHICKEN_LEGGINGS);
+            content.add(COOKED_CHICKEN_BOOTS);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
             content.add(CHICKEN_SPAWN_EGG);

@@ -14,6 +14,10 @@
     "item.exchickens.chicken_chestplate": "Exploding Chicken Chestplate",
     "item.exchickens.chicken_leggings": "Exploding Chicken Leggings",
     "item.exchickens.chicken_boots": "Exploding Chicken Boots",
+    "item.exchickens.cooked_chicken_helmet": "Cooked Exploding Chicken Helmet",
+    "item.exchickens.cooked_chicken_chestplate": "Cooked Exploding Chicken Chestplate",
+    "item.exchickens.cooked_chicken_leggings": "Cooked Exploding Chicken Leggings",
+    "item.exchickens.cooked_chicken_boots": "Cooked Exploding Chicken Boots",
 
     "attribute.modifier.chicken_blast": "Explodes on death",
 
