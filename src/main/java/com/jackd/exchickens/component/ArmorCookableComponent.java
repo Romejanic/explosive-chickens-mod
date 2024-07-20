@@ -28,7 +28,7 @@ public record ArmorCookableComponent(float maxCookTime, ItemStack cookedItem) {
             ArmorCookableComponent comp = stack.get(ModContent.ARMOR_COOKABLE_COMPONENT);
             float cookTime = stack.getOrDefault(ModContent.ARMOR_COOK_TIME_COMPONENT, 0f) + SECONDS_PER_TICK;
             if(cookTime > comp.maxCookTime()) {
-                int armorSlot = PlayerInventory.MAIN_SIZE + slot;
+                int armorSlot = getInventorySlot(stack, slot, living.getInventory());
                 ItemStack cookedStack = comp.cookedItem();
                 cookedStack.applyComponentsFrom(stack.getComponents());
                 cookedStack.remove(ModContent.ARMOR_COOKABLE_COMPONENT);
@@ -37,6 +37,11 @@ public record ArmorCookableComponent(float maxCookTime, ItemStack cookedItem) {
                 stack.set(ModContent.ARMOR_COOK_TIME_COMPONENT, cookTime);
             }
         }
+    }
+
+    private static int getInventorySlot(ItemStack stack, int slot, PlayerInventory inv) {
+        int index = inv.getSlotWithStack(stack);
+        return index > -1 ? index : PlayerInventory.MAIN_SIZE + slot;
     }
 
     public static ArmorCookableComponent defaultWithItem(ItemConvertible item) {
