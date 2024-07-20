@@ -29,7 +29,7 @@ public class ExplosiveChickenArmor {
     }
 
     private static boolean isChickenArmor(RegistryEntry<ArmorMaterial> material) {
-        return material == ModContent.CHICKEN_ARMOR;
+        return material == ModContent.CHICKEN_ARMOR || material == ModContent.COOKED_CHICKEN_ARMOR;
     }
 
 }
