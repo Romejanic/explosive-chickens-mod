@@ -3,7 +3,8 @@
     "package": "com.jackd.exchickens.mixins",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-        "LivingEntityMixin"
+        "LivingEntityMixin",
+        "ItemMixin"
     ],
     "injectors": {
         "defaultRequire": 1
