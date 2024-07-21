@@ -29,7 +29,7 @@ public record ArmorCookableComponent(float maxCookTime, ItemStack cookedItem) {
             float cookTime = stack.getOrDefault(ModContent.ARMOR_COOK_TIME_COMPONENT, 0f) + SECONDS_PER_TICK;
             if(cookTime > comp.maxCookTime()) {
                 int armorSlot = getInventorySlot(stack, slot, living.getInventory());
-                ItemStack cookedStack = comp.cookedItem();
+                ItemStack cookedStack = comp.cookedItem().copy();
                 cookedStack.applyComponentsFrom(stack.getComponents());
                 cookedStack.remove(ModContent.ARMOR_COOKABLE_COMPONENT);
                 living.getInventory().setStack(armorSlot, cookedStack);
