@@ -1,6 +1,7 @@
 package com.jackd.exchickens.component;
 
 import com.jackd.exchickens.ModContent;
+import com.jackd.exchickens.util.ItemUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -30,7 +31,7 @@ public record ArmorCookableComponent(float maxCookTime, ItemStack cookedItem) {
             if(cookTime > comp.maxCookTime()) {
                 int armorSlot = getInventorySlot(stack, slot, living.getInventory());
                 ItemStack cookedStack = comp.cookedItem().copy();
-                cookedStack.applyComponentsFrom(stack.getComponents());
+                ItemUtils.mergeComponentsFromStack(stack, cookedStack);
                 cookedStack.remove(ModContent.ARMOR_COOKABLE_COMPONENT);
                 living.getInventory().setStack(armorSlot, cookedStack);
             } else {
