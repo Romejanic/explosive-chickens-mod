@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "exchickens:item/launcher"
+        "layer0": "exchickens:item/incendiary_incubating_launcher"
     }
 }
