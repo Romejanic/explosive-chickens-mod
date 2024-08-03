@@ -13,7 +13,7 @@ public class ExplosiveChickens implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ModContent.registerContent();
+        ModContent.registerMiscContent();
         LOGGER.info("Finished registering mod content");
     }
 

@@ -1,6 +1,5 @@
 package com.jackd.exchickens;
 
-import com.google.common.collect.Lists;
 import com.jackd.exchickens.block.BlockChickenTrap;
 import com.jackd.exchickens.component.ArmorCookableComponent;
 import com.jackd.exchickens.entity.EntityExplodingChicken;
@@ -55,6 +54,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ModContent {
 
     // ============ ENTITIES ============ //
@@ -85,7 +86,11 @@ public class ModContent {
     );
 
     // ============ BLOCKS ============ //
-    public static final Block CHICKEN_TRAP_BLOCK = new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block CHICKEN_TRAP_BLOCK = registerBlock(
+        "chicken_trap",
+        new BlockChickenTrap(AbstractBlock.Settings.create().nonOpaque().noCollision().sounds(BlockSoundGroup.STONE).breakInstantly().pistonBehavior(PistonBehavior.DESTROY)),
+        ItemGroups.FUNCTIONAL
+    );
 
     // ============ ARMOR MATERIALS ============ //
     public static final RegistryEntry<ArmorMaterial> CHICKEN_ARMOR = registerArmorMaterial("chicken",
@@ -128,24 +133,24 @@ public class ModContent {
     );
 
     // ============ ITEMS ============ //
-    public static final Item TRICK_EGG_ITEM = new ItemTrickEgg(Identifier.ofVanilla("egg"));
-    public static final Item TRICK_RAW_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken"));
-    public static final Item TRICK_COOKED_CHICKEN_ITEM = new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.ofVanilla("cooked_chicken"));
-    public static final Item CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, new Item.Settings().maxCount(1).maxDamage(150));
-    public static final Item INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
-    public static final Item INCENDIARY_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.REGULAR, true, new Item.Settings().maxCount(1).maxDamage(150));
-    public static final Item INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM = new ItemChickenLauncher(Variant.INCUBATING, true, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
+    public static final Item CHICKEN_SPAWN_EGG = registerItem("exploding_chicken_spawn_egg", new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings()), ItemGroups.SPAWN_EGGS);
 
-    public static final Item COOKED_CHICKEN_HELMET = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)));
-    public static final Item COOKED_CHICKEN_CHESTPLATE = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)));
-    public static final Item COOKED_CHICKEN_LEGGINGS = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)));
-    public static final Item COOKED_CHICKEN_BOOTS = new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)));
-    public static final Item CHICKEN_HELMET = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_HELMET)));
-    public static final Item CHICKEN_CHESTPLATE = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_CHESTPLATE)));
-    public static final Item CHICKEN_LEGGINGS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_LEGGINGS)));
-    public static final Item CHICKEN_BOOTS = new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_BOOTS)));
+    public static final Item TRICK_EGG_ITEM = registerItem("egg", new ItemTrickEgg(Identifier.ofVanilla("egg")), ItemGroups.FOOD_AND_DRINK);
+    public static final Item TRICK_RAW_CHICKEN_ITEM = registerItem("chicken", new ItemTrickFood(FoodComponents.CHICKEN, Identifier.ofVanilla("chicken")), ItemGroups.FOOD_AND_DRINK);
+    public static final Item TRICK_COOKED_CHICKEN_ITEM = registerItem("cooked_chicken", new ItemTrickFood(FoodComponents.COOKED_CHICKEN, Identifier.ofVanilla("cooked_chicken")), ItemGroups.FOOD_AND_DRINK);
+    public static final Item CHICKEN_LAUNCHER_ITEM = registerItem("launcher", new ItemChickenLauncher(Variant.REGULAR, new Item.Settings().maxCount(1).maxDamage(150)), ItemGroups.COMBAT);
+    public static final Item INCUBATING_CHICKEN_LAUNCHER_ITEM = registerItem("incubating_launcher", new ItemChickenLauncher(Variant.INCUBATING, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)), ItemGroups.COMBAT);
+    public static final Item INCENDIARY_CHICKEN_LAUNCHER_ITEM = registerItem("incendiary_launcher", new ItemChickenLauncher(Variant.REGULAR, true, new Item.Settings().maxCount(1).maxDamage(150)), ItemGroups.COMBAT);
+    public static final Item INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM = registerItem("incendiary_incubating_launcher", new ItemChickenLauncher(Variant.INCUBATING, true, new Item.Settings().maxCount(1).maxDamage(150).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)), ItemGroups.COMBAT);
 
-    public static final Item CHICKEN_SPAWN_EGG = new SpawnEggItem(EXPLODING_CHICKEN_ENTITY, 0xcccccc, 0xff3300, new Item.Settings());
+    public static final Item COOKED_CHICKEN_HELMET = registerItem("chicken_helmet", new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4))), ItemGroups.COMBAT);
+    public static final Item COOKED_CHICKEN_CHESTPLATE = registerItem("chicken_chestplate", new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4))), ItemGroups.COMBAT);
+    public static final Item COOKED_CHICKEN_LEGGINGS = registerItem("chicken_leggings", new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4))), ItemGroups.COMBAT);
+    public static final Item COOKED_CHICKEN_BOOTS = registerItem("chicken_boots", new ArmorItem(COOKED_CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4))), ItemGroups.COMBAT);
+    public static final Item CHICKEN_HELMET = registerItem("cooked_chicken_helmet", new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_HELMET))), ItemGroups.COMBAT);
+    public static final Item CHICKEN_CHESTPLATE = registerItem("cooked_chicken_chestplate", new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_CHESTPLATE))), ItemGroups.COMBAT);
+    public static final Item CHICKEN_LEGGINGS = registerItem("cooked_chicken_leggings", new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_LEGGINGS))), ItemGroups.COMBAT);
+    public static final Item CHICKEN_BOOTS = registerItem("cooked_chicken_boots", new ArmorItem(CHICKEN_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(4)).component(ARMOR_COOKABLE_COMPONENT, ArmorCookableComponent.defaultWithItem(COOKED_CHICKEN_BOOTS))), ItemGroups.COMBAT);
 
     // ============ DAMAGE ============ //
     public static final RegistryKey<DamageType> DAMAGE_TRICK_EGG = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("trick_egg"));
@@ -156,78 +161,13 @@ public class ModContent {
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
         .icon(() -> new ItemStack(CHICKEN_SPAWN_EGG))
         .displayName(Text.translatable("itemGroup.exchickens.tab"))
-        .entries((ctx, entries) -> {
-            entries.addAll(Lists.newArrayList(
-                CHICKEN_SPAWN_EGG,
-                TRICK_EGG_ITEM,
-                TRICK_RAW_CHICKEN_ITEM,
-                TRICK_COOKED_CHICKEN_ITEM,
-                CHICKEN_LAUNCHER_ITEM,
-                INCUBATING_CHICKEN_LAUNCHER_ITEM,
-                INCENDIARY_CHICKEN_LAUNCHER_ITEM,
-                INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM,
-                CHICKEN_HELMET,
-                CHICKEN_CHESTPLATE,
-                CHICKEN_LEGGINGS,
-                CHICKEN_BOOTS,
-                COOKED_CHICKEN_HELMET,
-                COOKED_CHICKEN_CHESTPLATE,
-                COOKED_CHICKEN_LEGGINGS,
-                COOKED_CHICKEN_BOOTS
-            ).stream().map(i -> new ItemStack(i)).toList());
-        })
         .build();
 
     // ============ TAGS ============ //
     public static final TagKey<Biome> TAG_CHICKEN_BIOMES = TagKey.of(RegistryKeys.BIOME, id("chicken_spawn_biomes"));
 
 
-    protected static void registerContent() {
-        // register all blocks
-        registerBlock(id("chicken_trap"), CHICKEN_TRAP_BLOCK, ItemGroups.FUNCTIONAL);
-
-        // register all items
-        Registry.register(Registries.ITEM, id("egg"), TRICK_EGG_ITEM);
-        Registry.register(Registries.ITEM, id("chicken"), TRICK_RAW_CHICKEN_ITEM);
-        Registry.register(Registries.ITEM, id("cooked_chicken"), TRICK_COOKED_CHICKEN_ITEM);
-        Registry.register(Registries.ITEM, id("exploding_chicken_spawn_egg"), CHICKEN_SPAWN_EGG);
-        Registry.register(Registries.ITEM, id("launcher"), CHICKEN_LAUNCHER_ITEM);
-        Registry.register(Registries.ITEM, id("incubating_launcher"), INCUBATING_CHICKEN_LAUNCHER_ITEM);
-        Registry.register(Registries.ITEM, id("incendiary_launcher"), INCENDIARY_CHICKEN_LAUNCHER_ITEM);
-        Registry.register(Registries.ITEM, id("incendiary_incubating_launcher"), INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
-        Registry.register(Registries.ITEM, id("chicken_helmet"), CHICKEN_HELMET);
-        Registry.register(Registries.ITEM, id("chicken_chestplate"), CHICKEN_CHESTPLATE);
-        Registry.register(Registries.ITEM, id("chicken_leggings"), CHICKEN_LEGGINGS);
-        Registry.register(Registries.ITEM, id("chicken_boots"), CHICKEN_BOOTS);
-        Registry.register(Registries.ITEM, id("cooked_chicken_helmet"), COOKED_CHICKEN_HELMET);
-        Registry.register(Registries.ITEM, id("cooked_chicken_chestplate"), COOKED_CHICKEN_CHESTPLATE);
-        Registry.register(Registries.ITEM, id("cooked_chicken_leggings"), COOKED_CHICKEN_LEGGINGS);
-        Registry.register(Registries.ITEM, id("cooked_chicken_boots"), COOKED_CHICKEN_BOOTS);
-
-        // add items to vanilla groups
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
-            content.add(TRICK_EGG_ITEM);
-            content.add(TRICK_RAW_CHICKEN_ITEM);
-            content.add(TRICK_COOKED_CHICKEN_ITEM);
-        });
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
-            content.add(CHICKEN_LAUNCHER_ITEM);
-            content.add(INCUBATING_CHICKEN_LAUNCHER_ITEM);
-            content.add(INCENDIARY_CHICKEN_LAUNCHER_ITEM);
-            content.add(INCENDIARY_INCUBATING_CHICKEN_LAUNCHER_ITEM);
-            content.add(CHICKEN_HELMET);
-            content.add(CHICKEN_CHESTPLATE);
-            content.add(CHICKEN_LEGGINGS);
-            content.add(CHICKEN_BOOTS);
-            content.add(COOKED_CHICKEN_HELMET);
-            content.add(COOKED_CHICKEN_CHESTPLATE);
-            content.add(COOKED_CHICKEN_LEGGINGS);
-            content.add(COOKED_CHICKEN_BOOTS);
-        });
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
-            content.add(CHICKEN_SPAWN_EGG);
-        });
-
+    protected static void registerMiscContent() {
         // register entity attributes
         FabricDefaultAttributeRegistry.register(EXPLODING_CHICKEN_ENTITY, EntityExplodingChicken.createExplodingChickenAttributes());
 
@@ -241,26 +181,37 @@ public class ModContent {
         DispenserBlock.registerProjectileBehavior(TRICK_EGG_ITEM);
     }
 
-    private static void registerBlock(Identifier id, Block block, RegistryKey<ItemGroup> creativeTab) {
+    private static Block registerBlock(String name, Block block, @Nullable RegistryKey<ItemGroup> creativeTab) {
         // register the block itself
+        Identifier id = id(name);
         Registry.register(Registries.BLOCK, id, block);
         
         // register the block item
         Item blockItem = new BlockItem(block, new Item.Settings());
-        Registry.register(Registries.ITEM, id, blockItem);
+        registerItem(name, blockItem, creativeTab);
+
+        return block;
+    }
+
+    private static Item registerItem(String name, Item item, @Nullable RegistryKey<ItemGroup> creativeTab) {
+        // register the item itself
+        Identifier id = id(name);
+        Registry.register(Registries.ITEM, id, item);
 
         // add to creative tabs
         RegistryKey<ItemGroup> modTabKey = RegistryKey.of(Registries.ITEM_GROUP.getKey(), id("tab"));
         ItemGroupEvents.modifyEntriesEvent(modTabKey).register(content -> {
-            content.add(blockItem);
+            content.add(item);
         });
 
         // add to vanilla tab (optional)
         if(creativeTab != null) {
             ItemGroupEvents.modifyEntriesEvent(creativeTab).register(content -> {
-                content.add(blockItem);
+                content.add(item);
             });
         }
+
+        return item;
     }
 
     private static RegistryEntry<ArmorMaterial> registerArmorMaterial(String name, Map<ArmorItem.Type, Integer> defense, int enchantability, RegistryEntry<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, float toughness, float knockbackResist) {
