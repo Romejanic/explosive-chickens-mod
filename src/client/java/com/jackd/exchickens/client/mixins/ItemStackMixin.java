@@ -17,9 +17,11 @@ import com.jackd.exchickens.items.ItemChickenLauncher;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -48,9 +50,13 @@ public abstract class ItemStackMixin {
 
     @Inject(method="appendAttributeModifiersTooltip", at=@At("TAIL"))
     private void appendAttributeModifiersTooltip(Consumer<Text> textConsumer, @Nullable PlayerEntity player, CallbackInfo info) {
-        if(this.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ModContent.CHICKEN_ARMOR) {
+        if(this.getItem() instanceof ArmorItem armorItem && isChickenArmor(armorItem.getMaterial())) {
             textConsumer.accept(Text.translatable("attribute.modifier.chicken_blast").formatted(EntityAttribute.Category.POSITIVE.getFormatting(true)));
         }
+    }
+
+    private boolean isChickenArmor(RegistryEntry<ArmorMaterial> material) {
+        return material == ModContent.CHICKEN_ARMOR || material == ModContent.COOKED_CHICKEN_ARMOR;
     }
 
     @Shadow
