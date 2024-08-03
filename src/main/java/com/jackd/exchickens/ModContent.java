@@ -1,5 +1,6 @@
 package com.jackd.exchickens;
 
+import com.google.common.collect.Maps;
 import com.jackd.exchickens.block.BlockChickenTrap;
 import com.jackd.exchickens.component.ArmorCookableComponent;
 import com.jackd.exchickens.entity.EntityExplodingChicken;
@@ -57,6 +58,8 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 public class ModContent {
+
+    private static final Map<Item, Identifier> itemToIdMap = Maps.newHashMap();
 
     // ============ ENTITIES ============ //
     public static final EntityType<EntityExplodingChicken> EXPLODING_CHICKEN_ENTITY = Registry.register(
@@ -197,6 +200,7 @@ public class ModContent {
         // register the item itself
         Identifier id = id(name);
         Registry.register(Registries.ITEM, id, item);
+        itemToIdMap.put(item, id);
 
         // add to creative tabs
         RegistryKey<ItemGroup> modTabKey = RegistryKey.of(Registries.ITEM_GROUP.getKey(), id("tab"));
@@ -245,6 +249,11 @@ public class ModContent {
 
     public static Identifier id(String path) {
         return Identifier.of(ExplosiveChickens.MODID, path);
+    }
+
+    @Nullable
+    public static Identifier idOf(Item item) {
+        return itemToIdMap.get(item);
     }
 
 }

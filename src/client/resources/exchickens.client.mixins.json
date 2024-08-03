@@ -4,7 +4,10 @@
     "compatibilityLevel": "JAVA_21",
     "client": [
         "ItemStackMixin",
-        "PlayerEntityRendererMixin"
+        "PlayerEntityRendererMixin",
+        "ItemRendererAccessor",
+		"ItemRendererMixin",
+		"ModelLoaderMixin"
     ],
     "injectors": {
         "defaultRequire": 1

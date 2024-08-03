@@ -1,3 +1,6 @@
 {
-    "parent": "exchickens:item/launcher_model"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "exchickens:item/launcher"
+    }
 }

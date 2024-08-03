@@ -1,0 +1,7 @@
+{
+    "parent": "exchickens:item/launcher_model",
+    "textures": {
+        "0": "exchickens:item/incendiary_launcher_model",
+        "particle": "exchickens:item/incendiary_launcher_model"
+    }
+}
