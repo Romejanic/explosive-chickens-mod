@@ -2,6 +2,8 @@
     "itemGroup.exchickens.tab": "Explosive Chickens 2",
 
     "entity.exchickens.exploding_chicken": "Exploding Chicken",
+    "entity.exchickens.launched_egg": "Exploding Egg",
+    "entity.exchickens.incubating_launched_egg": "Incubated Exploding Egg",
 
     "block.exchickens.chicken_trap": "Chicken Trap",
 
