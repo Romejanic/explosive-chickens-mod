@@ -30,5 +30,8 @@
     "death.attack.exploding_food": "%1$s ate an explosive chicken",
     "death.attack.launcher": "%2$s hurled a chicken at %1$s",
     "death.attack.launcher.player": "%1$s was hit by a chicken whilst fighting %2$s",
-    "death.attack.launcher.item": "%2$s hurled a chicken at %1$s using %3$s"
+    "death.attack.launcher.item": "%2$s hurled a chicken at %1$s using %3$s",
+
+    "advancements.exchickens.slimy_revenge.title": "Slimy Revenge",
+    "advancements.exchickens.slimy_revenge.description": "Blow up another player by using Exploding Chicken Armor"
 }

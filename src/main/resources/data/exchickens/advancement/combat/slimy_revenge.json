@@ -1,0 +1,117 @@
+{
+    "parent": "minecraft:adventure/root",
+    "display": {
+        "icon": {
+            "id": "exchickens:chicken_chestplate"
+        },
+        "title": {
+            "translate": "advancements.exchickens.slimy_revenge.title"
+        },
+        "description": {
+            "translate": "advancements.exchickens.slimy_revenge.description"
+        },
+        "frame": "goal"
+    },
+    "criteria": {
+        "explodes_player_with_helmet": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:player"
+                },
+                "killing_blow": {
+                    "source_entity": {
+                        "equipment": {
+                            "head": {
+                                "items": ["exchickens:chicken_helmet","exchickens:cooked_chicken_helmet"]
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "id": "exchickens:armor_explosion",
+                            "expected": true
+                        }
+                    ]
+                }
+            }
+        },
+        "explodes_player_with_chestplate": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:player"
+                },
+                "killing_blow": {
+                    "source_entity": {
+                        "equipment": {
+                            "chest": {
+                                "items": ["exchickens:chicken_chestplate","exchickens:cooked_chicken_chestplate"]
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "id": "exchickens:armor_explosion",
+                            "expected": true
+                        }
+                    ]
+                }
+            }
+        },
+        "explodes_player_with_leggings": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:player"
+                },
+                "killing_blow": {
+                    "source_entity": {
+                        "equipment": {
+                            "legs": {
+                                "items": ["exchickens:chicken_leggings","exchickens:cooked_chicken_leggings"]
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "id": "exchickens:armor_explosion",
+                            "expected": true
+                        }
+                    ]
+                }
+            }
+        },
+        "explodes_player_with_boots": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:player"
+                },
+                "killing_blow": {
+                    "source_entity": {
+                        "equipment": {
+                            "feet": {
+                                "items": ["exchickens:chicken_boots","exchickens:cooked_chicken_boots"]
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "id": "exchickens:armor_explosion",
+                            "expected": true
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "explodes_player_with_helmet",
+            "explodes_player_with_chestplate",
+            "explodes_player_with_leggings",
+            "explodes_player_with_boots"
+        ]
+    ]
+}
