@@ -2,6 +2,16 @@
 
 [Report a bug or suggest a feature](https://github.com/Romejanic/explosive-chickens-mod/issues/new/choose)
 
+## Get the mod
+
+<a href="https://modrinth.com/project/explosive-chickens-2">
+    <img src="./media/misc/modrinth.png" width="250" />
+</a>
+
+<a href="https://legacy.curseforge.com/minecraft/mc-mods/explosive-chickens-2-revenge-of-the-fowl">
+    <img src="./media/misc/curseforge.png" width="250" >
+</a>
+
 ## License Information
 
 This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), by browsing or using the source code and assets of this mod you agree to the following terms:
