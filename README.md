@@ -4,7 +4,7 @@
 
 ## License Information
 
-This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), by installing this mod or browsing the source code you agree to the following terms:
+This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), by browsing or using the source code and assets of this mod you agree to the following terms:
 
 - BY: Credit must be given to me, the creator.
 - NC: Only non-commercial use of my work is permitted. Non-commercial means not primarily intended for or directed towards commercial advantage or monetary compensation.
