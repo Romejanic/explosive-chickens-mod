@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "redstone",
+    "key": {
+        "S": {
+            "item": "minecraft:stone_pressure_plate"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "R": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "pattern": [
+        "IRI",
+        " S "
+    ],
+    "result": {
+        "count": 1,
+        "id": "exchickens:chicken_trap"
+    }
+}
