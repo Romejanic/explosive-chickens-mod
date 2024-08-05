@@ -9,6 +9,8 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.function.BooleanBiFunction;
@@ -61,6 +63,8 @@ public class BlockChickenTrap extends HorizontalFacingBlock {
         if(entity instanceof EntityExplodingChicken chicken && !chicken.isTamed()) {
             world.setBlockState(pos, state.with(ACTIVE, true));
             chicken.setTrappedBlockPos(pos);
+            chicken.playSound(SoundEvents.ENTITY_CHICKEN_HURT);
+            world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
