@@ -254,13 +254,13 @@ public class EntityExplodingChicken extends ChickenEntity implements Tameable {
                 return ActionResult.SUCCESS;
             }
             // is the player using gunpowder?
-            else if(heldItem.isOf(Items.GUNPOWDER) && !this.isTamed() && !this.isTrapped()) {
-                if(!world.isClient) {
-                    this.tryTameChicken(player, world);
-                }
-                heldItem.decrementUnlessCreative(1, player);
-                return ActionResult.SUCCESS;
-            }
+            // else if(heldItem.isOf(Items.GUNPOWDER) && !this.isTamed() && !this.isTrapped()) {
+            //     if(!world.isClient) {
+            //         this.tryTameChicken(player, world);
+            //     }
+            //     heldItem.decrementUnlessCreative(1, player);
+            //     return ActionResult.SUCCESS;
+            // }
         }
         // otherwise is there a rocket attached?
         else if(this.hasFireworkAttached()) {
