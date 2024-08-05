@@ -9,7 +9,8 @@
     ],
     "contact": {
         "homepage": "https://github.com/Romejanic/explosive-chickens-mod",
-        "sources": "https://github.com/Romejanic/explosive-chickens-mod"
+        "sources": "https://github.com/Romejanic/explosive-chickens-mod",
+        "issues": "https://github.com/Romejanic/explosive-chickens-mod/issues/new/choose"
     },
     "icon": "assets/exchickens/icon.png",
     "environment": "*",
