@@ -10,8 +10,22 @@ jobs:
     env:
       java-version: 21
     steps:
-      - name: Build mod
-        uses: Romejanic/Explosive-Chickens-Mod/.github/workflows/build.yml@master
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Setup Java ${{ env.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.java-version }}
+          distribution: 'temurin'
+
+      - name: Run Gradle build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
 
       - name: Publish mod
         uses: Kir-Antipov/mc-publish@v3
@@ -29,4 +43,10 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: '1077885'
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build/libs/
 
