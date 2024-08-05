@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public record ArmorCookableComponent(float maxCookTime, ItemStack cookedItem) {
 
-    public static final float DEFAULT_COOK_TIME = 25.0f;
+    public static final float DEFAULT_COOK_TIME = 5.0f;
     public static final float SECONDS_PER_TICK = 1f / 20f;
 
     public static final Codec<ArmorCookableComponent> CODEC = RecordCodecBuilder.create(builder -> {
