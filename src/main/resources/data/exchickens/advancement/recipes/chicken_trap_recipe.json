@@ -1,0 +1,32 @@
+{
+    "parent": "exchickens:recipes/root",
+    "criteria": {
+        "has_redstone": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "minecraft:redstone"
+                    }
+                ]
+            }
+        },
+        "has_pressure_plate_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "minecraft:stone_pressure_plate"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_redstone",
+            "has_pressure_plate_recipe"
+        ]
+    ],
+    "rewards": {
+        "recipes": [
+            "exchickens:chicken_trap"
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "parent": "exchickens:recipes/root",
+    "criteria": {
+        "has_fake_egg": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "exchickens:egg"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [ "has_fake_egg" ]
+    ],
+    "rewards": {
+        "recipes": [
+            "exchickens:launcher",
+            "exchickens:incendiary_launcher",
+            "exchickens:incubating_launcher",
+            "exchickens:incendiary_incubating_launcher"
+        ]
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "parent": "exchickens:recipes/root",
+    "criteria": {
+        "has_raw_chicken": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "exchickens:chicken"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [ "has_raw_chicken" ]
+    ],
+    "rewards": {
+        "recipes": [
+            "exchickens:cooked_chicken",
+            "exchickens:cooked_chicken_from_smoking",
+            "exchickens:cooked_chicken_from_campfire_cooking",
+            "exchickens:chicken_helmet",
+            "exchickens:chicken_chestplate",
+            "exchickens:chicken_leggings",
+            "exchickens:chicken_boots"
+        ]
+    }
+}
