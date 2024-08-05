@@ -1,5 +1,7 @@
 # Explosive Chickens 2: Revenge of the Fowl
 
+## This mod requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+
 ![A classic mod returns](./media/misc/banner_top.png)
 
 This mod is the official remake of the [Explosive Chickens mod](https://www.planetminecraft.com/mod/minecraftforge-explosive-chickens-152/) I made back in 2013. I wanted to bring this mod back to life and extend it, with a focus on making the mod more survival-friendly and add some more options for PvP combat.
