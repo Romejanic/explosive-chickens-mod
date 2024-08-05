@@ -1,7 +1,9 @@
-name: Build
+name: Build mod
+
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+  workflow_call:
 
 jobs:
   build:

@@ -1,0 +1,32 @@
+name: Release mod
+
+on:
+  release:
+    types: ["published"]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    env:
+      java-version: 21
+    steps:
+      - name: Build mod
+        uses: Romejanic/Explosive-Chickens-Mod/.github/workflows/build.yml@master
+
+      - name: Publish mod
+        uses: Kir-Antipov/mc-publish@v3
+        with:
+          # general version config
+          version: ${{ github.event.release.tag_name }}
+          version-type: release
+          changelog: ${{ github.event.release.body }}
+          loaders: fabric
+          game-versions: '1.21'
+          java: ${{ env.java-version }}
+
+          # modrinth and curseforge config
+          modrinth-id: 'XknpdR0i'
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: '1077885'
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
